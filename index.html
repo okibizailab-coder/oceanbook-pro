@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>OceanBook Pro - マリン観光予約管理アプリ</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- モバイルヘッダー -->
+    <div class="mobile-header">
+        <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+        <h1>🌊 OceanBook Pro</h1>
+        <div style="width:40px;"></div>
+    </div>
+    
+    <!-- サイドバーオーバーレイ（モバイル用） -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    
+    <!-- サイドバーナビゲーション -->
+    <nav class="sidebar" id="sidebar">
+        <button class="sidebar-close" id="sidebar-close" style="display:none;">&times;</button>
+        <div class="sidebar-header">
+            <h1>🌊 OceanBook Pro</h1>
+            <p>マリン観光予約管理</p>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="#" data-page="dashboard" class="nav-link active">
+                <span class="icon">🏠</span>
+                <span>ダッシュボード</span>
+            </a></li>
+            <li><a href="#" data-page="reservations" class="nav-link">
+                <span class="icon">📋</span>
+                <span>予約管理</span>
+            </a></li>
+            <li><a href="#" data-page="line" class="nav-link">
+                <span class="icon">📱</span>
+                <span>LINE管理</span>
+                <span class="badge" id="line-badge"></span>
+            </a></li>
+            <li><a href="#" data-page="customers" class="nav-link">
+                <span class="icon">👥</span>
+                <span>顧客管理</span>
+            </a></li>
+            <li><a href="#" data-page="equipment" class="nav-link">
+                <span class="icon">🎽</span>
+                <span>器材準備リスト</span>
+            </a></li>
+            <li><a href="#" data-page="team-assignment" class="nav-link">
+                <span class="icon">👨‍👩‍👧‍👦</span>
+                <span>チーム分け</span>
+            </a></li>
+            <li><a href="#" data-page="analytics" class="nav-link">
+                <span class="icon">📊</span>
+                <span>分析</span>
+            </a></li>
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツエリア -->
+    <main class="main-content">
+        <!-- ダッシュボード -->
+        <div id="dashboard-page" class="page active">
+            <h2 class="page-title">ダッシュボード</h2>
+            
+            <!-- 天気・海況ウィジェット（NEW!） -->
+            <section class="dashboard-section">
+                <div id="weather-widget-loading" style="display:none;">
+                    <p>🌊 海況・天気データを読み込み中...</p>
+                </div>
+                <div id="weather-widget-content"></div>
+            </section>
+            
+            <!-- KPIカード -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon">📅</div>
+                    <div class="kpi-value" id="kpi-today-reservations">0</div>
+                    <div class="kpi-label">今日の予約</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon">💰</div>
+                    <div class="kpi-value" id="kpi-month-revenue">¥0</div>
+                    <div class="kpi-label">今月の売上</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon">❌</div>
+                    <div class="kpi-value" id="kpi-cancel-rate">0%</div>
+                    <div class="kpi-label">キャンセル率</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon">📱</div>
+                    <div class="kpi-value" id="kpi-line-unread">0</div>
+                    <div class="kpi-label">LINE未読</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon">🎽</div>
+                    <div class="kpi-value" id="kpi-equipment-check">0%</div>
+                    <div class="kpi-label">器材確認率</div>
+                </div>
+            </div>
+
+            <!-- 今日のスケジュール -->
+            <section class="dashboard-section">
+                <h3>📅 今日のスケジュール <span id="today-date"></span></h3>
+                <div id="today-schedule" class="schedule-grid"></div>
+            </section>
+
+            <!-- ミニカレンダー -->
+            <section class="dashboard-section">
+                <h3>🗓️ 予約カレンダー</h3>
+                <div id="mini-calendar"></div>
+            </section>
+            
+            <!-- 月間統計 -->
+            <section id="monthly-stats"></section>
+
+            <!-- アラート -->
+            <section class="dashboard-section">
+                <h3>⚠️ 重要アラート</h3>
+                <div id="alerts-panel"></div>
+            </section>
+        </div>
+
+        <!-- 予約管理 -->
+        <div id="reservations-page" class="page">
+            <div class="page-header">
+                <h2 class="page-title">予約管理</h2>
+                <button class="btn btn-primary" id="add-reservation-btn">+ 新規予約</button>
+            </div>
+
+            <!-- 検索・フィルター -->
+            <div class="filters">
+                <input type="text" id="reservation-search" placeholder="予約番号・代表者名で検索..." class="search-input">
+                <select id="status-filter" class="filter-select">
+                    <option value="">全ステータス</option>
+                    <option value="確定">確定</option>
+                    <option value="仮予約">仮予約</option>
+                    <option value="キャンセル">キャンセル</option>
+                    <option value="完了">完了</option>
+                </select>
+            </div>
+
+            <!-- 予約一覧テーブル -->
+            <div class="table-container">
+                <table class="data-table" id="reservations-table">
+                    <thead>
+                        <tr>
+                            <th>予約番号</th>
+                            <th>受付日</th>
+                            <th>開催日</th>
+                            <th>時間</th>
+                            <th>ツアー名</th>
+                            <th>代表者</th>
+                            <th>参加者数</th>
+                            <th>金額</th>
+                            <th>ステータス</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reservations-tbody"></tbody>
+                </table>
+            </div>
+
+            <!-- カレンダービュー -->
+            <div id="calendar-view" style="display:none;">
+                <div id="full-calendar"></div>
+            </div>
+        </div>
+
+        <!-- LINE管理 -->
+        <div id="line-page" class="page">
+            <h2 class="page-title">LINE管理</h2>
+            <div class="line-container">
+                <!-- 会話一覧 -->
+                <div class="line-sidebar">
+                    <div class="line-search">
+                        <input type="text" placeholder="会話を検索..." id="line-search-input">
+                    </div>
+                    <div class="conversations-list" id="conversations-list"></div>
+                </div>
+                
+                <!-- チャット表示 -->
+                <div class="line-chat">
+                    <div class="chat-header" id="chat-header">
+                        <div class="chat-header-info">
+                            <h3>会話を選択してください</h3>
+                        </div>
+                    </div>
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="empty-state">
+                            <p>👈 左側から会話を選択してください</p>
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" placeholder="メッセージを入力..." id="chat-input-field">
+                        <button class="btn btn-primary" id="chat-send-btn">送信</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 顧客管理 -->
+        <div id="customers-page" class="page">
+            <div class="page-header">
+                <h2 class="page-title">顧客管理</h2>
+                <button class="btn btn-primary" id="add-customer-btn">+ 新規顧客</button>
+            </div>
+
+            <div class="filters">
+                <input type="text" id="customer-search" placeholder="顧客名・電話番号で検索..." class="search-input">
+                <select id="customer-filter" class="filter-select">
+                    <option value="">全顧客</option>
+                    <option value="repeat">リピーター</option>
+                    <option value="new">新規</option>
+                </select>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table" id="customers-table">
+                    <thead>
+                        <tr>
+                            <th>顧客名</th>
+                            <th>電話番号</th>
+                            <th>来店回数</th>
+                            <th>累計金額</th>
+                            <th>最終来店</th>
+                            <th>リピーター</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customers-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 器材準備リスト -->
+        <div id="equipment-page" class="page">
+            <h2 class="page-title">器材準備リスト</h2>
+            
+            <div class="equipment-controls">
+                <input type="date" id="equipment-date" class="date-input">
+                <button class="btn btn-primary" id="show-equipment-btn">リストを表示</button>
+                <button class="btn btn-secondary" id="print-equipment-btn">🖨️ 印刷</button>
+            </div>
+
+            <div id="equipment-list-container"></div>
+        </div>
+
+        <!-- チーム分け -->
+        <div id="team-assignment-page" class="page">
+            <h2 class="page-title">チーム分け表</h2>
+            
+            <div class="team-controls">
+                <input type="date" id="team-date" class="date-input">
+                <button class="btn btn-primary" id="show-team-btn">チーム分けを表示</button>
+                <button class="btn btn-secondary" id="print-team-btn">🖨️ 印刷</button>
+            </div>
+            
+            <!-- モード切替 -->
+            <div class="team-mode-toggle">
+                <button class="mode-btn active" id="auto-mode-btn">🤖 自動割当</button>
+                <button class="mode-btn" id="manual-mode-btn">✋ 手動割当</button>
+                <div class="mode-description">
+                    <p id="auto-mode-desc" class="mode-desc active">
+                        自動割当：同じ時間帯の予約を自動でチーム分け。担当名を入力すると同じ名前のチームが統合されます。
+                    </p>
+                    <p id="manual-mode-desc" class="mode-desc" style="display:none;">
+                        手動割当：各予約に担当を割り当てると、同じ担当名の予約が自動で1つのチームに統合されます。
+                    </p>
+                </div>
+            </div>
+
+            <!-- ガイドスタッフ情報 -->
+            <div class="staff-info-panel">
+                <div class="staff-info-card">
+                    <div class="staff-icon">👨‍🏫</div>
+                    <div class="staff-content">
+                        <div class="staff-label">メインガイド</div>
+                        <div class="staff-count">2名</div>
+                    </div>
+                </div>
+                <div class="staff-info-card">
+                    <div class="staff-icon">🙋</div>
+                    <div class="staff-content">
+                        <div class="staff-label">ヘルプスタッフ</div>
+                        <div class="staff-count">3名</div>
+                    </div>
+                </div>
+                <div class="staff-info-card alert-card" id="help-alert-card" style="display:none;">
+                    <div class="staff-icon">⚠️</div>
+                    <div class="staff-content">
+                        <div class="staff-label">ヘルプ不足</div>
+                        <div class="staff-count" id="help-shortage-count">0名不足</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="team-assignment-container"></div>
+        </div>
+
+        <!-- 分析 -->
+        <div id="analytics-page" class="page">
+            <h2 class="page-title">分析ダッシュボード</h2>
+            
+            <!-- タブナビゲーション -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="ai-marketing">🤖 AIマーケティングレポート</button>
+                <button class="tab-btn" data-tab="monthly-stats">📊 月別統計</button>
+                <button class="tab-btn" data-tab="trends">📅 予約動向</button>
+                <button class="tab-btn" data-tab="cancellations">❌ キャンセル分析</button>
+                <button class="tab-btn" data-tab="demographics">👥 顧客属性</button>
+                <button class="tab-btn" data-tab="revenue">💰 売上収益</button>
+                <button class="tab-btn" data-tab="weather">🌊 天候・海況</button>
+                <button class="tab-btn" data-tab="equipment-demand">🎽 器材需要</button>
+                <button class="tab-btn" data-tab="guide-performance">👨‍🏫 ガイド実績</button>
+            </div>
+
+            <!-- タブコンテンツ -->
+            <!-- AIマーケティングレポート -->
+            <div class="tab-content active" id="ai-marketing-tab">
+                <div class="ai-report-container">
+                    <div class="report-header">
+                        <h3>🤖 AIマーケティング分析レポート</h3>
+                        <p>予約データを基にAIが自動生成したマーケティング戦略レポートです</p>
+                        <button class="btn btn-primary" id="generate-report-btn" onclick="generateAIMarketingReport()">🔄 レポートを再生成</button>
+                    </div>
+                    <div id="ai-report-content" class="ai-report-content">
+                        <div class="loading-state">
+                            <p>📊 データを分析中...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 月別統計 -->
+            <div class="tab-content" id="monthly-stats-tab">
+                <div class="monthly-stats-container">
+                    <!-- 月選択ヘッダー -->
+                    <div class="stats-month-header">
+                        <button class="month-nav-btn" onclick="changeStatsMonth(-1)">◀</button>
+                        <div class="month-selector">
+                            <input type="number" id="stats-year" min="2020" max="2030" value="2026" onchange="updateMonthlyStats()">
+                            <span>年</span>
+                            <input type="number" id="stats-month" min="1" max="12" value="3" onchange="updateMonthlyStats()">
+                            <span>月</span>
+                        </div>
+                        <button class="month-nav-btn" onclick="changeStatsMonth(1)">▶</button>
+                        <button class="today-btn" onclick="resetToCurrentMonth()">今月</button>
+                    </div>
+
+                    <!-- KPIカードグリッド -->
+                    <div class="stats-kpi-grid">
+                        <div class="stats-kpi-card">
+                            <div class="kpi-label">総予約数</div>
+                            <div class="kpi-value" id="stats-total-reservations">0</div>
+                            <div class="kpi-sublabel">件</div>
+                        </div>
+                        <div class="stats-kpi-card">
+                            <div class="kpi-label">開催数</div>
+                            <div class="kpi-value" id="stats-held-count">0</div>
+                            <div class="kpi-sublabel">件</div>
+                        </div>
+                        <div class="stats-kpi-card">
+                            <div class="kpi-label">キャンセル数</div>
+                            <div class="kpi-value" id="stats-cancel-count">0</div>
+                            <div class="kpi-sublabel">件</div>
+                        </div>
+                        <div class="stats-kpi-card">
+                            <div class="kpi-label">仮予約数</div>
+                            <div class="kpi-value" id="stats-provisional-count">0</div>
+                            <div class="kpi-sublabel">件</div>
+                        </div>
+                    </div>
+
+                    <!-- 率指標カードグリッド -->
+                    <div class="stats-rate-grid">
+                        <div class="stats-rate-card" style="border-left: 4px solid #0A9396;">
+                            <div class="rate-label">開催率</div>
+                            <div class="rate-value" id="stats-holding-rate">0%</div>
+                            <div class="rate-formula">= (確定 + 完了) ÷ 総予約数</div>
+                        </div>
+                        <div class="stats-rate-card" style="border-left: 4px solid #DC3545;">
+                            <div class="rate-label">キャンセル率</div>
+                            <div class="rate-value" id="stats-cancel-rate">0%</div>
+                            <div class="rate-formula">= キャンセル数 ÷ 総予約数</div>
+                        </div>
+                        <div class="stats-rate-card" style="border-left: 4px solid #28A745;">
+                            <div class="rate-label">完了率</div>
+                            <div class="rate-value" id="stats-completion-rate">0%</div>
+                            <div class="rate-formula">= 完了 ÷ 総予約数</div>
+                        </div>
+                        <div class="stats-rate-card" style="border-left: 4px solid #FF8C00;">
+                            <div class="rate-label">営業日稼働率</div>
+                            <div class="rate-value" id="stats-utilization-rate">0%</div>
+                            <div class="rate-formula">= 予約のある日 ÷ 当月日数</div>
+                        </div>
+                    </div>
+
+                    <!-- 売上・参加者数カード -->
+                    <div class="stats-summary-grid">
+                        <div class="stats-summary-card">
+                            <div class="summary-icon">💰</div>
+                            <div class="summary-content">
+                                <div class="summary-label">総売上</div>
+                                <div class="summary-value" id="stats-total-sales">¥0</div>
+                            </div>
+                        </div>
+                        <div class="stats-summary-card">
+                            <div class="summary-icon">👥</div>
+                            <div class="summary-content">
+                                <div class="summary-label">総参加者数</div>
+                                <div class="summary-value" id="stats-total-participants">0人</div>
+                            </div>
+                        </div>
+                        <div class="stats-summary-card">
+                            <div class="summary-icon">📊</div>
+                            <div class="summary-content">
+                                <div class="summary-label">平均参加者数/件</div>
+                                <div class="summary-value" id="stats-avg-participants">0人</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- マーケティング指標セクション -->
+                    <div class="stats-section-title">📈 マーケティング・顧客指標</div>
+                    <div class="stats-marketing-grid">
+                        <div class="stats-metric-card">
+                            <div class="metric-icon">🎯</div>
+                            <div class="metric-content">
+                                <div class="metric-label">新規顧客率</div>
+                                <div class="metric-value" id="stats-new-customer-rate">0%</div>
+                                <div class="metric-detail" id="stats-new-customer-detail">新規: 0 / リピート: 0</div>
+                            </div>
+                        </div>
+                        <div class="stats-metric-card">
+                            <div class="metric-icon">💎</div>
+                            <div class="metric-content">
+                                <div class="metric-label">客単価</div>
+                                <div class="metric-value" id="stats-avg-order-value">¥0</div>
+                                <div class="metric-detail">売上 ÷ 開催数</div>
+                            </div>
+                        </div>
+                        <div class="stats-metric-card">
+                            <div class="metric-icon">👤</div>
+                            <div class="metric-content">
+                                <div class="metric-label">参加者あたり売上</div>
+                                <div class="metric-value" id="stats-revenue-per-participant">¥0</div>
+                                <div class="metric-detail">売上 ÷ 総参加者数</div>
+                            </div>
+                        </div>
+                        <div class="stats-metric-card">
+                            <div class="metric-icon">⏱️</div>
+                            <div class="metric-content">
+                                <div class="metric-label">平均リードタイム</div>
+                                <div class="metric-value" id="stats-avg-lead-time">0日</div>
+                                <div class="metric-detail">予約から実施まで</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 集客チャネル分析 -->
+                    <div class="stats-section-title">📱 集客チャネル分析</div>
+                    <div class="stats-channel-grid">
+                        <div class="channel-card">
+                            <div class="channel-header">
+                                <span class="channel-name">🌐 自社HP</span>
+                                <span class="channel-count" id="channel-hp-count">0件</span>
+                            </div>
+                            <div class="channel-bar">
+                                <div class="channel-bar-fill" id="channel-hp-bar" style="width: 0%; background: #0A9396;"></div>
+                            </div>
+                            <div class="channel-stats">
+                                <span id="channel-hp-rate">0%</span>
+                                <span id="channel-hp-revenue">¥0</span>
+                            </div>
+                        </div>
+                        <div class="channel-card">
+                            <div class="channel-header">
+                                <span class="channel-name">🔍 Google検索</span>
+                                <span class="channel-count" id="channel-google-count">0件</span>
+                            </div>
+                            <div class="channel-bar">
+                                <div class="channel-bar-fill" id="channel-google-bar" style="width: 0%; background: #4285F4;"></div>
+                            </div>
+                            <div class="channel-stats">
+                                <span id="channel-google-rate">0%</span>
+                                <span id="channel-google-revenue">¥0</span>
+                            </div>
+                        </div>
+                        <div class="channel-card">
+                            <div class="channel-header">
+                                <span class="channel-name">📱 SNS</span>
+                                <span class="channel-count" id="channel-sns-count">0件</span>
+                            </div>
+                            <div class="channel-bar">
+                                <div class="channel-bar-fill" id="channel-sns-bar" style="width: 0%; background: #E1306C;"></div>
+                            </div>
+                            <div class="channel-stats">
+                                <span id="channel-sns-rate">0%</span>
+                                <span id="channel-sns-revenue">¥0</span>
+                            </div>
+                        </div>
+                        <div class="channel-card">
+                            <div class="channel-header">
+                                <span class="channel-name">🏢 その他</span>
+                                <span class="channel-count" id="channel-other-count">0件</span>
+                            </div>
+                            <div class="channel-bar">
+                                <div class="channel-bar-fill" id="channel-other-bar" style="width: 0%; background: #6C757D;"></div>
+                            </div>
+                            <div class="channel-stats">
+                                <span id="channel-other-rate">0%</span>
+                                <span id="channel-other-revenue">¥0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 予約タイミング分析 -->
+                    <div class="stats-section-title">⏰ 予約タイミング分析</div>
+                    <div class="stats-timing-grid">
+                        <div class="timing-card">
+                            <div class="timing-label">直前予約（0-3日前）</div>
+                            <div class="timing-value" id="timing-last-minute">0件</div>
+                            <div class="timing-rate" id="timing-last-minute-rate">0%</div>
+                        </div>
+                        <div class="timing-card">
+                            <div class="timing-label">1週間前（4-7日）</div>
+                            <div class="timing-value" id="timing-week">0件</div>
+                            <div class="timing-rate" id="timing-week-rate">0%</div>
+                        </div>
+                        <div class="timing-card">
+                            <div class="timing-label">2週間前（8-14日）</div>
+                            <div class="timing-value" id="timing-two-weeks">0件</div>
+                            <div class="timing-rate" id="timing-two-weeks-rate">0%</div>
+                        </div>
+                        <div class="timing-card">
+                            <div class="timing-label">早期予約（15日以上）</div>
+                            <div class="timing-value" id="timing-early">0件</div>
+                            <div class="timing-rate" id="timing-early-rate">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="trends-tab">
+                <div class="charts-grid">
+                    <div class="chart-card"><canvas id="chart-trends-1" style="height:300px"></canvas></div>
+                    <div class="chart-card"><canvas id="chart-trends-2" style="height:300px"></canvas></div>
+                    <div class="chart-card"><canvas id="chart-trends-3" style="height:300px"></canvas></div>
+                    <div class="chart-card"><canvas id="chart-trends-4" style="height:300px"></canvas></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="cancellations-tab">
+                <div class="charts-grid">
+                    <div class="chart-card"><canvas id="chart-cancel-1" style="height:300px"></canvas></div>
+                    <div class="chart-card"><canvas id="chart-cancel-2" style="height:300px"></canvas></div>
+                    <div class="chart-card"><canvas id="chart-cancel-3" style="height:300px"></canvas></div>
+                    <div class="chart-card"><canvas id="chart-cancel-4" style="height:300px"></canvas></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="demographics-tab">
+                <div class="charts-grid">
+                    <div class="chart-card"><canvas id="chart-demo-1" style="height:300px"></canvas></div>
+                    <div class="chart-card"><canvas id="chart-demo-2" style="height:300px"></canvas></div>
+                    <div class="chart-card"><canvas id="chart-demo-3" style="height:300px"></canvas></div>
+                    <div class="chart-card"><canvas id="chart-demo-4" style="height:300px"></canvas></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="revenue-tab">
+                <div class="charts-grid">
+                    <div class="chart-card"><canvas id="chart-revenue-1" style="height:300px"></canvas></div>
+                    <div class="chart-card"><canvas id="chart-revenue-2" style="height:300px"></canvas></div>
+                    <div class="chart-card"><canvas id="chart-revenue-3" style="height:300px"></canvas></div>
+                    <div class="chart-card"><canvas id="chart-revenue-4" style="height:300px"></canvas></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="weather-tab">
+                <div class="charts-grid">
+                    <div class="chart-card"><canvas id="chart-weather-1" style="height:300px"></canvas></div>
+                    <div class="chart-card"><canvas id="chart-weather-2" style="height:300px"></canvas></div>
+                    <div class="chart-card"><canvas id="chart-weather-3" style="height:300px"></canvas></div>
+                    <div class="chart-card"><canvas id="chart-weather-4" style="height:300px"></canvas></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="equipment-demand-tab">
+                <div class="charts-grid">
+                    <div class="chart-card"><canvas id="chart-equip-1" style="height:300px"></canvas></div>
+                    <div class="chart-card"><canvas id="chart-equip-2" style="height:300px"></canvas></div>
+                    <div class="chart-card"><canvas id="chart-equip-3" style="height:300px"></canvas></div>
+                    <div class="chart-card"><canvas id="chart-equip-4" style="height:300px"></canvas></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="guide-performance-tab">
+                <div id="guide-summary-container"></div>
+                <div id="guide-analysis-container"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 予約詳細モーダル -->
+    <div class="modal" id="reservation-detail-modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 id="modal-title">予約詳細</h3>
+                <button class="modal-close" onclick="closeReservationDetail()">&times;</button>
+            </div>
+            <div class="modal-body" id="reservation-detail-body"></div>
+        </div>
+    </div>
+
+    <!-- 新規予約モーダル -->
+    <div class="modal" id="new-reservation-modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>新規予約登録</h3>
+                <button class="modal-close" onclick="closeNewReservation()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="new-reservation-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>①希望プラン*</label>
+                            <select name="tourType" required>
+                                <option value="">選択してください</option>
+                                <option value="合同プラン">合同プラン</option>
+                                <option value="貸切プラン">貸切プラン</option>
+                                <option value="ファミリープラン">ファミリープラン</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>②参加日時*</label>
+                            <input type="datetime-local" name="tourDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>③代表者電話番号*</label>
+                            <input type="tel" name="phone" required>
+                        </div>
+                    </div>
+
+                    <h4>参加者情報</h4>
+                    <div id="participants-container">
+                        <div class="participant-form">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>氏名*</label>
+                                    <input type="text" name="participants[0][name]" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>年齢*</label>
+                                    <input type="number" name="participants[0][age]" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>性別*</label>
+                                    <select name="participants[0][gender]" required>
+                                        <option value="男性">男性</option>
+                                        <option value="女性">女性</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>身長(cm)*</label>
+                                    <input type="number" name="participants[0][height]" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>体重(kg)*</label>
+                                    <input type="number" name="participants[0][weight]" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>足サイズ(cm)*</label>
+                                    <input type="number" step="0.5" name="participants[0][footSize]" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>視力*</label>
+                                    <input type="number" step="0.01" name="participants[0][vision]" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary" id="add-participant-btn">+ 参加者を追加</button>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>⑤持病の有無</label>
+                            <select name="medical">
+                                <option value="なし">なし</option>
+                                <option value="あり">あり（要詳細確認）</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>⑥妊婦の有無</label>
+                            <select name="pregnant">
+                                <option value="なし">なし</option>
+                                <option value="あり">あり</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>⑦経験回数</label>
+                            <input type="number" name="experience" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Cカード有無</label>
+                            <select name="cCard">
+                                <option value="なし">なし</option>
+                                <option value="あり">あり</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>⑧送迎有無</label>
+                            <select name="transfer">
+                                <option value="なし">なし</option>
+                                <option value="あり">あり</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>ホテル名</label>
+                            <input type="text" name="hotel">
+                        </div>
+                        <div class="form-group">
+                            <label>⑨水中カメラレンタル</label>
+                            <select name="camera">
+                                <option value="なし">なし</option>
+                                <option value="あり">あり（¥4,400）</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>⑩予約サイト名*</label>
+                            <select name="source" required>
+                                <option value="">選択してください</option>
+                                <option value="糸満マリンセンターHP">糸満マリンセンターHP</option>
+                                <option value="じゃらん">じゃらん</option>
+                                <option value="楽天トラベル">楽天トラベル</option>
+                                <option value="電話">電話</option>
+                                <option value="LINE">LINE</option>
+                                <option value="その他">その他</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>⑪特記事項</label>
+                        <textarea name="notes" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeNewReservation()">キャンセル</button>
+                        <button type="submit" class="btn btn-primary">予約を登録</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 日付詳細モーダル -->
+    <div class="modal" id="date-detail-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="date-detail-title"></h3>
+                <button class="modal-close" onclick="closeDateDetail()">&times;</button>
+            </div>
+            <div class="modal-body" id="date-detail-body"></div>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/holidays.js"></script>
+    <script src="js/equipment.js"></script>
+    <script src="js/line-chat.js"></script>
+    <script src="js/ai-marketing.js"></script>
+    <script src="js/monthly-stats.js"></script>
+    <script src="js/team-assignment.js"></script>
+    <script src="js/guide-analysis.js"></script>
+    <script src="js/weather-api.js"></script>
+    <script src="js/weather-widget.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
