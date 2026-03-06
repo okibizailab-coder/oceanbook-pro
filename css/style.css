@@ -1,0 +1,625 @@
+/* ============================================
+   OceanBook Pro - スタイルシート
+   バージョン: v20.0
+   最終更新: 2026-03-06
+   ============================================ */
+
+:root {
+    --ocean-primary: #0A9396;
+    --ocean-dark: #005F73;
+    --ocean-light: #94D2BD;
+    --ocean-accent: #EE9B00;
+    --bg-main: #F8F9FA;
+    --text-dark: #212529;
+    --text-light: #6C757D;
+    --border-color: #DEE2E6;
+    --success: #28A745;
+    --warning: #FFC107;
+    --danger: #DC3545;
+    --info: #17A2B8;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
+    background: var(--bg-main);
+    color: var(--text-dark);
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ==================================================
+   サイドバーナビゲーション
+   ================================================== */
+
+.sidebar {
+    width: 280px;
+    background: var(--ocean-dark);
+    color: white;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    overflow-y: auto;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+}
+
+.sidebar-header {
+    padding: 24px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.sidebar-header p {
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+.nav-menu {
+    list-style: none;
+    padding: 16px 0;
+    flex: 1;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.nav-link.active {
+    background: var(--ocean-primary);
+    color: white;
+    font-weight: 600;
+}
+
+.nav-link .icon {
+    font-size: 20px;
+    width: 24px;
+    text-align: center;
+}
+
+.nav-link .badge {
+    margin-left: auto;
+    background: var(--danger);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    min-width: 20px;
+    text-align: center;
+}
+
+.sidebar-close {
+    display: none;
+}
+
+/* ==================================================
+   モバイルヘッダー
+   ================================================== */
+
+.mobile-header {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: var(--ocean-dark);
+    color: white;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 999;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.mobile-menu-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
+    width: 40px;
+}
+
+.mobile-header h1 {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+}
+
+/* ==================================================
+   メインコンテンツ
+   ================================================== */
+
+.main-content {
+    flex: 1;
+    margin-left: 280px;
+    padding: 32px;
+    width: calc(100% - 280px);
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.page-header {
+    margin-bottom: 32px;
+}
+
+.page-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--ocean-dark);
+    margin-bottom: 8px;
+}
+
+/* ==================================================
+   天気・海況ウィジェット
+   ================================================== */
+
+.weather-widget {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.weather-widget-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ocean-dark);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#weather-widget-loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-light);
+}
+
+#weather-widget-content {
+    display: none;
+}
+
+/* 潮汐セクション */
+.tide-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.tide-info {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 12px;
+}
+
+.tide-item {
+    text-align: center;
+}
+
+.tide-label {
+    font-size: 12px;
+    opacity: 0.9;
+    margin-bottom: 4px;
+}
+
+.tide-time {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.sun-info {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.sun-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+}
+
+/* 現在の天気 */
+.current-weather {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.weather-icon {
+    font-size: 64px;
+    margin-bottom: 12px;
+}
+
+.temperature {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--ocean-dark);
+    margin-bottom: 8px;
+}
+
+.weather-description {
+    font-size: 16px;
+    color: var(--text-light);
+}
+
+/* 天気詳細 */
+.weather-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.weather-detail-item {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.detail-label {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 4px;
+}
+
+.detail-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ocean-dark);
+}
+
+/* ウィジェットアクション */
+.weather-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: var(--ocean-primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--ocean-dark);
+}
+
+.btn-secondary {
+    background: #ecf0f1;
+    color: var(--text-dark);
+}
+
+.btn-secondary:hover {
+    background: #d5dbdb;
+}
+
+.last-update {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 12px;
+}
+
+.weather-widget-error {
+    text-align: center;
+    padding: 40px;
+    color: var(--danger);
+}
+
+/* ==================================================
+   予報モーダル
+   ================================================== */
+
+.forecast-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+
+.forecast-modal.active {
+    display: flex;
+}
+
+.forecast-modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.forecast-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.forecast-modal-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ocean-dark);
+}
+
+.forecast-close {
+    font-size: 32px;
+    color: var(--text-light);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    line-height: 1;
+}
+
+.forecast-close:hover {
+    color: var(--text-dark);
+}
+
+.forecast-list {
+    display: grid;
+    gap: 12px;
+}
+
+.forecast-day {
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.forecast-date {
+    font-weight: 600;
+    color: var(--ocean-dark);
+    min-width: 120px;
+}
+
+.forecast-weather {
+    flex: 1;
+    text-align: center;
+    font-size: 24px;
+}
+
+/* ==================================================
+   KPI カード
+   ================================================== */
+
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+}
+
+.kpi-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.kpi-label {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 8px;
+}
+
+.kpi-value {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--ocean-dark);
+}
+
+.kpi-unit {
+    font-size: 18px;
+    color: var(--text-light);
+}
+
+/* ==================================================
+   テーブル
+   ================================================== */
+
+.table-container {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #f8f9fa;
+}
+
+th {
+    padding: 16px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--ocean-dark);
+    border-bottom: 2px solid var(--border-color);
+}
+
+td {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+tbody tr:hover {
+    background: #f8f9fa;
+}
+
+/* ステータスバッジ */
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-confirmed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-cancelled {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* ==================================================
+   レスポンシブ（モバイル対応）
+   ================================================== */
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .mobile-header {
+        display: flex;
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 80px 16px 16px;
+        width: 100%;
+    }
+
+    /* 天気ウィジェット */
+    .weather-details {
+        grid-template-columns: 1fr;
+    }
+
+    .tide-info {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .weather-actions {
+        flex-direction: column;
+    }
+
+    /* KPI */
+    .kpi-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* 予報モーダル */
+    .forecast-day {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+}
+
+/* ==================================================
+   ユーティリティ
+   ================================================== */
+
+.text-center {
+    text-align: center;
+}
+
+.hidden {
+    display: none !important;
+}
