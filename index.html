@@ -172,17 +172,21 @@
             </div>
         </div>
 
-        <!-- LINE管理 -->
+                <!-- LINE管理 -->
         <div id="line-page" class="page">
-            <h2 class="page-title">LINE管理</h2>
+            <div class="page-header">
+                <h2 class="page-title">LINE管理</h2>
+                <button class="btn btn-secondary" id="line-auto-mode-toggle">✋ 手動モード</button>
+            </div>
             <div class="line-container">
                 <!-- 会話一覧 -->
                 <div class="line-sidebar">
                     <div class="line-search">
                         <input type="text" placeholder="会話を検索..." id="line-search-input">
                     </div>
-                    <div class="conversations-list" id="conversations-list"></div>
+                    <div class="conversations-list" id="line-conversations-list"></div>
                 </div>
+
                 
                 <!-- チャット表示 -->
                 <div class="line-chat">
@@ -220,33 +224,20 @@
                 </select>
             </div>
 
-            <div class="table-container">
-                <table class="data-table" id="customers-table">
-                    <thead>
-                        <tr>
-                            <th>顧客名</th>
-                            <th>電話番号</th>
-                            <th>来店回数</th>
-                            <th>累計金額</th>
-                            <th>最終来店</th>
-                            <th>リピーター</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody id="customers-tbody"></tbody>
-                </table>
+                        <div class="table-container" id="customers-table">
             </div>
-        </div>
+
 
         <!-- 器材準備リスト -->
         <div id="equipment-page" class="page">
             <h2 class="page-title">器材準備リスト</h2>
             
-            <div class="equipment-controls">
+                        <div class="equipment-controls">
                 <input type="date" id="equipment-date" class="date-input">
-                <button class="btn btn-primary" id="show-equipment-btn">リストを表示</button>
+                <button class="btn btn-primary" id="load-equipment-btn">リストを表示</button>
                 <button class="btn btn-secondary" id="print-equipment-btn">🖨️ 印刷</button>
             </div>
+
 
             <div id="equipment-list-container"></div>
         </div>
