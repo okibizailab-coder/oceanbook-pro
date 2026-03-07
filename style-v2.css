@@ -1,0 +1,3217 @@
+ 1	/* ============================================
+     2	   OceanBook Pro - スタイルシート
+     3	   ============================================ */
+     4	
+     5	:root {
+     6	    --ocean-primary: #0A9396;
+     7	    --ocean-dark: #005F73;
+     8	    --ocean-light: #94D2BD;
+     9	    --ocean-accent: #EE9B00;
+    10	    --bg-main: #F8F9FA;
+    11	    --text-dark: #212529;
+    12	    --text-light: #6C757D;
+    13	    --border-color: #DEE2E6;
+    14	    --success: #28A745;
+    15	    --warning: #FFC107;
+    16	    --danger: #DC3545;
+    17	    --info: #17A2B8;
+    18	}
+    19	
+    20	* {
+    21	    margin: 0;
+    22	    padding: 0;
+    23	    box-sizing: border-box;
+    24	}
+    25	
+    26	body {
+    27	    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
+    28	    background: var(--bg-main);
+    29	    color: var(--text-dark);
+    30	    display: flex;
+    31	    min-height: 100vh;
+    32	}
+    33	
+    34	/* ==================================================
+    35	   天気・海況ウィジェット
+    36	   ================================================== */
+    37	
+    38	.weather-widget {
+    39	    background: white;
+    40	    border-radius: 12px;
+    41	    padding: 24px;
+    42	    margin-bottom: 24px;
+    43	    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    44	}
+    45	
+    46	.weather-widget-title {
+    47	    font-size: 18px;
+    48	    font-weight: 600;
+    49	    color: var(--ocean-dark);
+    50	    margin-bottom: 20px;
+    51	    display: flex;
+    52	    align-items: center;
+    53	    gap: 8px;
+    54	}
+    55	
+    56	/* 潮汐セクション */
+    57	.tide-section {
+    58	    background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+    59	    border-radius: 8px;
+    60	    padding: 16px;
+    61	    margin-bottom: 16px;
+    62	}
+    63	
+    64	.tide-info {
+    65	    display: flex;
+    66	    justify-content: space-between;
+    67	    align-items: center;
+    68	    padding: 8px 0;
+    69	    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    70	}
+    71	
+    72	.tide-info:last-child {
+    73	    border-bottom: none;
+    74	}
+    75	
+    76	.tide-label {
+    77	    font-weight: 600;
+    78	    color: var(--ocean-dark);
+    79	    font-size: 14px;
+    80	}
+    81	
+    82	.tide-times {
+    83	    font-weight: 700;
+    84	    color: var(--ocean-primary);
+    85	    font-size: 15px;
+    86	}
+    87	
+    88	/* 現在の天気セクション */
+    89	.current-section {
+    90	    margin-bottom: 16px;
+    91	}
+    92	
+    93	.weather-main {
+    94	    text-align: center;
+    95	    margin-bottom: 20px;
+    96	}
+    97	
+    98	.weather-icon-temp {
+    99	    display: flex;
+   100	    align-items: center;
+   101	    justify-content: center;
+   102	    gap: 16px;
+   103	    margin-bottom: 8px;
+   104	}
+   105	
+   106	.weather-icon-large {
+   107	    font-size: 64px;
+   108	}
+   109	
+   110	.weather-temp-large {
+   111	    font-size: 48px;
+   112	    font-weight: 700;
+   113	    color: var(--ocean-dark);
+   114	}
+   115	
+   116	.weather-desc {
+   117	    font-size: 18px;
+   118	    color: var(--text-light);
+   119	    font-weight: 500;
+   120	}
+   121	
+   122	.weather-details {
+   123	    display: grid;
+   124	    grid-template-columns: repeat(3, 1fr);
+   125	    gap: 16px;
+   126	}
+   127	
+   128	.weather-detail-item {
+   129	    text-align: center;
+   130	    padding: 12px;
+   131	    background: var(--bg-main);
+   132	    border-radius: 8px;
+   133	}
+   134	
+   135	.detail-label {
+   136	    display: block;
+   137	    font-size: 13px;
+   138	    color: var(--text-light);
+   139	    margin-bottom: 4px;
+   140	}
+   141	
+   142	.detail-value {
+   143	    display: block;
+   144	    font-size: 18px;
+   145	    font-weight: 700;
+   146	    color: var(--ocean-dark);
+   147	}
+   148	
+   149	/* アクションボタン */
+   150	.weather-actions {
+   151	    display: flex;
+   152	    gap: 12px;
+   153	    margin-top: 16px;
+   154	}
+   155	
+   156	.weather-actions .btn {
+   157	    flex: 1;
+   158	}
+   159	
+   160	.weather-update-time {
+   161	    text-align: center;
+   162	    font-size: 12px;
+   163	    color: var(--text-light);
+   164	    margin-top: 12px;
+   165	}
+   166	
+   167	/* ローディング表示 */
+   168	#weather-widget-loading {
+   169	    text-align: center;
+   170	    padding: 40px;
+   171	    color: var(--text-light);
+   172	}
+   173	
+   174	.weather-widget-error {
+   175	    text-align: center;
+   176	    padding: 40px;
+   177	    color: var(--danger);
+   178	}
+   179	
+   180	.weather-widget-error .btn {
+   181	    margin-top: 16px;
+   182	}
+   183	
+   184	/* 予報モーダル */
+   185	.forecast-list {
+   186	    display: grid;
+   187	    gap: 12px;
+   188	}
+   189	
+   190	.forecast-item {
+   191	    display: flex;
+   192	    justify-content: space-between;
+   193	    align-items: center;
+   194	    padding: 16px;
+   195	    background: var(--bg-main);
+   196	    border-radius: 8px;
+   197	    border-left: 4px solid var(--ocean-primary);
+   198	}
+   199	
+   200	.forecast-date {
+   201	    font-weight: 600;
+   202	    color: var(--ocean-dark);
+   203	    font-size: 15px;
+   204	}
+   205	
+   206	.forecast-weather {
+   207	    color: var(--text-light);
+   208	    font-size: 14px;
+   209	}
+   210	
+   211	/* 通知アニメーション */
+   212	@keyframes slideIn {
+   213	    from {
+   214	        transform: translateX(400px);
+   215	        opacity: 0;
+   216	    }
+   217	    to {
+   218	        transform: translateX(0);
+   219	        opacity: 1;
+   220	    }
+   221	}
+   222	
+   223	@keyframes slideOut {
+   224	    from {
+   225	        transform: translateX(0);
+   226	        opacity: 1;
+   227	    }
+   228	    to {
+   229	        transform: translateX(400px);
+   230	        opacity: 0;
+   231	    }
+   232	}
+   233	
+   234	/* モバイル対応 */
+   235	@media (max-width: 768px) {
+   236	    .weather-details {
+   237	        grid-template-columns: 1fr;
+   238	    }
+   239	    
+   240	    .weather-actions {
+   241	        flex-direction: column;
+   242	    }
+   243	    
+   244	    .weather-icon-temp {
+   245	        flex-direction: column;
+   246	        gap: 8px;
+   247	    }
+   248	    
+   249	    .weather-icon-large {
+   250	        font-size: 48px;
+   251	    }
+   252	    
+   253	    .weather-temp-large {
+   254	        font-size: 36px;
+   255	    }
+   256	}
+   257	
+   258	/* モバイルヘッダー（デフォルトは非表示） */
+   259	.mobile-header {
+   260	    display: none;
+   261	}
+   262	
+   263	.mobile-menu-btn {
+   264	    display: none;
+   265	}
+   266	
+   267	.sidebar-overlay {
+   268	    display: none;
+   269	}
+   270	
+   271	.sidebar-close {
+   272	    display: none;
+   273	}
+   274	
+   275	/* ========== サイドバーナビゲーション ========== */
+   276	.sidebar {
+   277	    width: 260px;
+   278	    background: var(--ocean-primary);
+   279	    color: white;
+   280	    position: fixed;
+   281	    left: 0;
+   282	    top: 0;
+   283	    bottom: 0;
+   284	    overflow-y: auto;
+   285	    z-index: 100;
+   286	}
+   287	
+   288	.sidebar-header {
+   289	    padding: 24px 20px;
+   290	    border-bottom: 1px solid rgba(255,255,255,0.1);
+   291	}
+   292	
+   293	.sidebar-header h1 {
+   294	    font-size: 24px;
+   295	    margin-bottom: 8px;
+   296	}
+   297	
+   298	.sidebar-header p {
+   299	    font-size: 12px;
+   300	    opacity: 0.9;
+   301	}
+   302	
+   303	.nav-menu {
+   304	    list-style: none;
+   305	    padding: 12px 0;
+   306	}
+   307	
+   308	.nav-link {
+   309	    display: flex;
+   310	    align-items: center;
+   311	    padding: 14px 20px;
+   312	    color: white;
+   313	    text-decoration: none;
+   314	    transition: all 0.2s;
+   315	    position: relative;
+   316	}
+   317	
+   318	.nav-link:hover {
+   319	    background: rgba(255,255,255,0.1);
+   320	}
+   321	
+   322	.nav-link.active {
+   323	    background: rgba(255,255,255,0.2);
+   324	    border-left: 4px solid var(--ocean-accent);
+   325	}
+   326	
+   327	.nav-link .icon {
+   328	    font-size: 20px;
+   329	    margin-right: 12px;
+   330	    width: 24px;
+   331	    text-align: center;
+   332	}
+   333	
+   334	.nav-link .badge {
+   335	    background: var(--danger);
+   336	    color: white;
+   337	    font-size: 11px;
+   338	    padding: 2px 8px;
+   339	    border-radius: 12px;
+   340	    margin-left: auto;
+   341	}
+   342	
+   343	/* ========== メインコンテンツ ========== */
+   344	.main-content {
+   345	    margin-left: 260px;
+   346	    flex: 1;
+   347	    padding: 24px;
+   348	    overflow-x: hidden;
+   349	}
+   350	
+   351	.page {
+   352	    display: none;
+   353	}
+   354	
+   355	.page.active {
+   356	    display: block;
+   357	    animation: fadeIn 0.3s;
+   358	}
+   359	
+   360	@keyframes fadeIn {
+   361	    from { opacity: 0; }
+   362	    to { opacity: 1; }
+   363	}
+   364	
+   365	.page-title {
+   366	    font-size: 28px;
+   367	    margin-bottom: 24px;
+   368	    color: var(--ocean-dark);
+   369	}
+   370	
+   371	.page-header {
+   372	    display: flex;
+   373	    justify-content: space-between;
+   374	    align-items: center;
+   375	    margin-bottom: 24px;
+   376	}
+   377	
+   378	/* ========== KPIカード ========== */
+   379	.kpi-grid {
+   380	    display: grid;
+   381	    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+   382	    gap: 20px;
+   383	    margin-bottom: 32px;
+   384	}
+   385	
+   386	.kpi-card {
+   387	    background: white;
+   388	    border-radius: 12px;
+   389	    padding: 24px;
+   390	    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+   391	    text-align: center;
+   392	    border: 2px solid transparent;
+   393	    transition: all 0.3s;
+   394	}
+   395	
+   396	.kpi-card:hover {
+   397	    border-color: var(--ocean-primary);
+   398	    transform: translateY(-2px);
+   399	}
+   400	
+   401	.kpi-icon {
+   402	    font-size: 36px;
+   403	    margin-bottom: 12px;
+   404	}
+   405	
+   406	.kpi-value {
+   407	    font-size: 48px;
+   408	    font-weight: bold;
+   409	    color: var(--ocean-primary);
+   410	    margin-bottom: 8px;
+   411	    word-break: break-word;
+   412	    overflow-wrap: break-word;
+   413	    line-height: 1.1;
+   414	}
+   415	
+   416	/* 金額表示用の自動サイズ調整 */
+   417	.kpi-value.revenue {
+   418	    font-size: clamp(24px, 5vw, 48px);
+   419	    white-space: nowrap;
+   420	    overflow: hidden;
+   421	    text-overflow: ellipsis;
+   422	}
+   423	
+   424	/* 長い数値の場合は小さくする */
+   425	.kpi-value[data-length="long"] {
+   426	    font-size: 36px;
+   427	}
+   428	
+   429	.kpi-value[data-length="very-long"] {
+   430	    font-size: 28px;
+   431	}
+   432	
+   433	.kpi-label {
+   434	    font-size: 14px;
+   435	    color: var(--text-light);
+   436	    font-weight: 500;
+   437	}
+   438	
+   439	/* ========== ダッシュボード ========== */
+   440	.dashboard-section {
+   441	    background: white;
+   442	    border-radius: 12px;
+   443	    padding: 24px;
+   444	    margin-bottom: 24px;
+   445	    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+   446	}
+   447	
+   448	.dashboard-section h3 {
+   449	    font-size: 20px;
+   450	    margin-bottom: 20px;
+   451	    color: var(--ocean-dark);
+   452	    border-bottom: 2px solid var(--ocean-light);
+   453	    padding-bottom: 12px;
+   454	}
+   455	
+   456	.schedule-grid {
+   457	    display: grid;
+   458	    gap: 16px;
+   459	}
+   460	
+   461	.schedule-card {
+   462	    background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+   463	    border-left: 4px solid var(--ocean-primary);
+   464	    padding: 16px;
+   465	    border-radius: 8px;
+   466	    display: flex;
+   467	    justify-content: space-between;
+   468	    align-items: center;
+   469	}
+   470	
+   471	.schedule-info h4 {
+   472	    font-size: 18px;
+   473	    margin-bottom: 8px;
+   474	    color: var(--ocean-dark);
+   475	}
+   476	
+   477	.schedule-info p {
+   478	    font-size: 14px;
+   479	    color: var(--text-light);
+   480	}
+   481	
+   482	.schedule-actions {
+   483	    display: flex;
+   484	    gap: 8px;
+   485	}
+   486	
+   487	/* ========== ミニカレンダー ========== */
+   488	#mini-calendar {
+   489	    display: grid;
+   490	    grid-template-columns: repeat(7, 1fr);
+   491	    gap: 8px;
+   492	    align-items: start;
+   493	}
+   494	
+   495	.calendar-header {
+   496	    grid-column: 1 / -1;
+   497	    display: flex;
+   498	    justify-content: space-between;
+   499	    align-items: center;
+   500	    padding: 12px;
+   501	    background: linear-gradient(135deg, var(--ocean-primary) 0%, var(--ocean-dark) 100%);
+   502	    color: white;
+   503	    border-radius: 8px;
+   504	    margin-bottom: 8px;
+   505	}
+   506	
+   507	.calendar-nav-btn {
+   508	    background: none;
+   509	    border: none;
+   510	    color: white;
+   511	    font-size: 24px;
+   512	    cursor: pointer;
+   513	    padding: 4px 12px;
+   514	    transition: transform 0.2s;
+   515	}
+   516	
+   517	.calendar-nav-btn:hover {
+   518	    transform: scale(1.2);
+   519	}
+   520	
+   521	.calendar-month-label {
+   522	    font-size: 18px;
+   523	    font-weight: 600;
+   524	}
+   525	
+   526	.calendar-cell {
+   527	    aspect-ratio: 1;
+   528	    border: 1px solid var(--border-color);
+   529	    border-radius: 8px;
+   530	    padding: 8px;
+   531	    text-align: center;
+   532	    cursor: pointer;
+   533	    transition: all 0.2s;
+   534	    position: relative;
+   535	}
+   536	
+   537	.calendar-cell:hover {
+   538	    background: var(--ocean-light);
+   539	    transform: scale(1.05);
+   540	}
+   541	
+   542	.calendar-cell.today {
+   543	    border: 2px solid var(--ocean-primary);
+   544	    font-weight: bold;
+   545	    box-shadow: 0 0 8px rgba(10, 147, 150, 0.5);
+   546	}
+   547	
+   548	.calendar-cell.holiday {
+   549	    background: #FFE5E5;
+   550	}
+   551	
+   552	.calendar-cell.has-reservations {
+   553	    background: var(--ocean-light);
+   554	}
+   555	
+   556	.calendar-cell .date {
+   557	    font-weight: 600;
+   558	    margin-bottom: 4px;
+   559	}
+   560	
+   561	.calendar-cell .count {
+   562	    font-size: 12px;
+   563	    color: var(--text-light);
+   564	}
+   565	
+   566	.calendar-badge {
+   567	    position: absolute;
+   568	    top: 4px;
+   569	    right: 4px;
+   570	    background: var(--ocean-primary);
+   571	    color: white;
+   572	    font-size: 10px;
+   573	    padding: 2px 6px;
+   574	    border-radius: 10px;
+   575	}
+   576	
+   577	/* カレンダー色分け */
+   578	.calendar-cell.level-0 { background: white; }
+   579	.calendar-cell.level-1 { background: #E0F2FE; }
+   580	.calendar-cell.level-2 { background: #7DD3FC; }
+   581	.calendar-cell.level-3 { background: #0EA5E9; color: white; }
+   582	.calendar-cell.level-4 { background: #0369A1; color: white; }
+   583	.calendar-cell.level-full { background: #FF6B6B; color: white; }
+   584	
+   585	/* 祝日は背景を薄赤に */
+   586	.calendar-cell.holiday.level-0 { background: #FFE5E5; }
+   587	.calendar-cell.holiday.level-1 { background: #FFD1D1; }
+   588	.calendar-cell.holiday.level-2 { background: #FFBABA; }
+   589	.calendar-cell.holiday.level-3 { background: #FF8A8A; color: white; }
+   590	.calendar-cell.holiday.level-4 { background: #FF6B6B; color: white; }
+   591	
+   592	/* ========== アラート ========== */
+   593	#alerts-panel {
+   594	    display: grid;
+   595	    gap: 12px;
+   596	}
+   597	
+   598	.alert-item {
+   599	    padding: 12px 16px;
+   600	    border-radius: 8px;
+   601	    display: flex;
+   602	    align-items: center;
+   603	    gap: 12px;
+   604	}
+   605	
+   606	.alert-item.warning {
+   607	    background: #FFF3CD;
+   608	    border-left: 4px solid var(--warning);
+   609	}
+   610	
+   611	.alert-item.danger {
+   612	    background: #F8D7DA;
+   613	    border-left: 4px solid var(--danger);
+   614	}
+   615	
+   616	.alert-item.info {
+   617	    background: #D1ECF1;
+   618	    border-left: 4px solid var(--info);
+   619	}
+   620	
+   621	/* ========== ボタン ========== */
+   622	.btn {
+   623	    padding: 10px 20px;
+   624	    border: none;
+   625	    border-radius: 8px;
+   626	    font-size: 14px;
+   627	    font-weight: 500;
+   628	    cursor: pointer;
+   629	    transition: all 0.2s;
+   630	    text-decoration: none;
+   631	    display: inline-block;
+   632	}
+   633	
+   634	.btn-primary {
+   635	    background: var(--ocean-primary);
+   636	    color: white;
+   637	}
+   638	
+   639	.btn-primary:hover {
+   640	    background: var(--ocean-dark);
+   641	    transform: translateY(-1px);
+   642	    box-shadow: 0 4px 12px rgba(10,147,150,0.3);
+   643	}
+   644	
+   645	.btn-secondary {
+   646	    background: var(--border-color);
+   647	    color: var(--text-dark);
+   648	}
+   649	
+   650	.btn-secondary:hover {
+   651	    background: #CED4DA;
+   652	}
+   653	
+   654	.btn-danger {
+   655	    background: var(--danger);
+   656	    color: white;
+   657	}
+   658	
+   659	.btn-danger:hover {
+   660	    background: #C82333;
+   661	}
+   662	
+   663	/* ========== フィルター・検索 ========== */
+   664	.filters {
+   665	    display: flex;
+   666	    gap: 16px;
+   667	    margin-bottom: 20px;
+   668	}
+   669	
+   670	.search-input {
+   671	    flex: 1;
+   672	    padding: 10px 16px;
+   673	    border: 1px solid var(--border-color);
+   674	    border-radius: 8px;
+   675	    font-size: 14px;
+   676	}
+   677	
+   678	.filter-select {
+   679	    padding: 10px 16px;
+   680	    border: 1px solid var(--border-color);
+   681	    border-radius: 8px;
+   682	    font-size: 14px;
+   683	    background: white;
+   684	}
+   685	
+   686	/* ========== テーブル ========== */
+   687	.table-container {
+   688	    background: white;
+   689	    border-radius: 12px;
+   690	    overflow: hidden;
+   691	    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+   692	}
+   693	
+   694	.data-table {
+   695	    width: 100%;
+   696	    border-collapse: collapse;
+   697	}
+   698	
+   699	.data-table thead {
+   700	    background: var(--ocean-primary);
+   701	    color: white;
+   702	}
+   703	
+   704	.data-table th {
+   705	    padding: 14px 16px;
+   706	    text-align: left;
+   707	    font-weight: 600;
+   708	    font-size: 13px;
+   709	}
+   710	
+   711	.data-table tbody tr {
+   712	    border-bottom: 1px solid var(--border-color);
+   713	    transition: background 0.2s;
+   714	    cursor: pointer;
+   715	}
+   716	
+   717	.data-table tbody tr:hover {
+   718	    background: #F0F9FF;
+   719	}
+   720	
+   721	.data-table td {
+   722	    padding: 12px 16px;
+   723	    font-size: 14px;
+   724	}
+   725	
+   726	/* ========== ステータスバッジ ========== */
+   727	.status-badge {
+   728	    display: inline-block;
+   729	    padding: 4px 12px;
+   730	    border-radius: 12px;
+   731	    font-size: 12px;
+   732	    font-weight: 500;
+   733	}
+   734	
+   735	.status-badge.confirmed {
+   736	    background: #D1F4E0;
+   737	    color: var(--success);
+   738	}
+   739	
+   740	.status-badge.tentative {
+   741	    background: #D1ECF1;
+   742	    color: var(--info);
+   743	}
+   744	
+   745	.status-badge.cancelled {
+   746	    background: #F8D7DA;
+   747	    color: var(--danger);
+   748	}
+   749	
+   750	.status-badge.completed {
+   751	    background: #E2E6EA;
+   752	    color: var(--text-light);
+   753	}
+   754	
+   755	/* ========== LINE管理 ========== */
+   756	.line-container {
+   757	    display: grid;
+   758	    grid-template-columns: 320px 1fr;
+   759	    gap: 0;
+   760	    background: white;
+   761	    border-radius: 12px;
+   762	    overflow: hidden;
+   763	    height: calc(100vh - 120px);
+   764	    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+   765	}
+   766	
+   767	.line-sidebar {
+   768	    border-right: 1px solid var(--border-color);
+   769	    display: flex;
+   770	    flex-direction: column;
+   771	}
+   772	
+   773	.line-search {
+   774	    padding: 16px;
+   775	    border-bottom: 1px solid var(--border-color);
+   776	}
+   777	
+   778	.line-search input {
+   779	    width: 100%;
+   780	    padding: 8px 12px;
+   781	    border: 1px solid var(--border-color);
+   782	    border-radius: 6px;
+   783	}
+   784	
+   785	.conversations-list {
+   786	    flex: 1;
+   787	    overflow-y: auto;
+   788	}
+   789	
+   790	.conversation-item {
+   791	    padding: 16px;
+   792	    border-bottom: 1px solid var(--border-color);
+   793	    cursor: pointer;
+   794	    transition: background 0.2s;
+   795	    display: flex;
+   796	    gap: 12px;
+   797	    align-items: center;
+   798	}
+   799	
+   800	.conversation-item:hover {
+   801	    background: #F0F9FF;
+   802	}
+   803	
+   804	.conversation-item.active {
+   805	    background: var(--ocean-light);
+   806	}
+   807	
+   808	.conversation-avatar {
+   809	    width: 48px;
+   810	    height: 48px;
+   811	    border-radius: 50%;
+   812	    display: flex;
+   813	    align-items: center;
+   814	    justify-content: center;
+   815	    font-weight: bold;
+   816	    font-size: 18px;
+   817	    color: white;
+   818	    flex-shrink: 0;
+   819	}
+   820	
+   821	.avatar-green { background: var(--success); }
+   822	.avatar-red { background: var(--danger); }
+   823	.avatar-gray { background: var(--text-light); }
+   824	
+   825	.conversation-info {
+   826	    flex: 1;
+   827	    min-width: 0;
+   828	}
+   829	
+   830	.conversation-header {
+   831	    display: flex;
+   832	    justify-content: space-between;
+   833	    align-items: center;
+   834	    margin-bottom: 4px;
+   835	}
+   836	
+   837	.conversation-name {
+   838	    font-weight: 600;
+   839	    font-size: 14px;
+   840	}
+   841	
+   842	.conversation-time {
+   843	    font-size: 11px;
+   844	    color: var(--text-light);
+   845	}
+   846	
+   847	.conversation-preview {
+   848	    font-size: 13px;
+   849	    color: var(--text-light);
+   850	    white-space: nowrap;
+   851	    overflow: hidden;
+   852	    text-overflow: ellipsis;
+   853	}
+   854	
+   855	.conversation-unread {
+   856	    background: var(--danger);
+   857	    color: white;
+   858	    font-size: 11px;
+   859	    padding: 2px 8px;
+   860	    border-radius: 10px;
+   861	    margin-left: 8px;
+   862	}
+   863	
+   864	/* チャット表示 */
+   865	.line-chat {
+   866	    display: flex;
+   867	    flex-direction: column;
+   868	}
+   869	
+   870	.chat-header {
+   871	    padding: 16px 20px;
+   872	    border-bottom: 1px solid var(--border-color);
+   873	    background: #F8F9FA;
+   874	}
+   875	
+   876	.chat-header h3 {
+   877	    font-size: 18px;
+   878	    margin-bottom: 4px;
+   879	}
+   880	
+   881	.chat-messages {
+   882	    flex: 1;
+   883	    padding: 20px;
+   884	    overflow-y: auto;
+   885	    background: #F0F9FF;
+   886	}
+   887	
+   888	.empty-state {
+   889	    display: flex;
+   890	    align-items: center;
+   891	    justify-content: center;
+   892	    height: 100%;
+   893	    color: var(--text-light);
+   894	}
+   895	
+   896	.message-bubble {
+   897	    max-width: 70%;
+   898	    margin-bottom: 16px;
+   899	    animation: slideIn 0.2s;
+   900	}
+   901	
+   902	@keyframes slideIn {
+   903	    from {
+   904	        opacity: 0;
+   905	        transform: translateY(10px);
+   906	    }
+   907	    to {
+   908	        opacity: 1;
+   909	        transform: translateY(0);
+   910	    }
+   911	}
+   912	
+   913	.message-bubble.staff {
+   914	    margin-left: auto;
+   915	    text-align: right;
+   916	}
+   917	
+   918	.message-bubble.customer {
+   919	    margin-right: auto;
+   920	}
+   921	
+   922	.message-sender {
+   923	    font-size: 12px;
+   924	    color: var(--text-light);
+   925	    margin-bottom: 4px;
+   926	}
+   927	
+   928	.message-content {
+   929	    padding: 12px 16px;
+   930	    border-radius: 12px;
+   931	    display: inline-block;
+   932	    text-align: left;
+   933	    white-space: pre-wrap;
+   934	}
+   935	
+   936	.message-bubble.staff .message-content {
+   937	    background: var(--ocean-primary);
+   938	    color: white;
+   939	    border-bottom-right-radius: 4px;
+   940	}
+   941	
+   942	.message-bubble.customer .message-content {
+   943	    background: white;
+   944	    color: var(--text-dark);
+   945	    border-bottom-left-radius: 4px;
+   946	}
+   947	
+   948	.message-time {
+   949	    font-size: 11px;
+   950	    color: var(--text-light);
+   951	    margin-top: 4px;
+   952	}
+   953	
+   954	.chat-input {
+   955	    padding: 16px 20px;
+   956	    border-top: 1px solid var(--border-color);
+   957	    display: flex;
+   958	    gap: 12px;
+   959	    background: white;
+   960	}
+   961	
+   962	#chat-input-field {
+   963	    flex: 1;
+   964	    padding: 10px 16px;
+   965	    border: 1px solid var(--border-color);
+   966	    border-radius: 20px;
+   967	    font-size: 14px;
+   968	}
+   969	
+   970	/* ========== 器材準備リスト ========== */
+   971	.equipment-controls {
+   972	    display: flex;
+   973	    gap: 12px;
+   974	    margin-bottom: 24px;
+   975	}
+   976	
+   977	.date-input {
+   978	    padding: 10px 16px;
+   979	    border: 1px solid var(--border-color);
+   980	    border-radius: 8px;
+   981	    font-size: 14px;
+   982	}
+   983	
+   984	.equipment-team {
+   985	    background: white;
+   986	    border-radius: 12px;
+   987	    padding: 20px;
+   988	    margin-bottom: 24px;
+   989	    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+   990	}
+   991	
+   992	.team-header {
+   993	    background: linear-gradient(135deg, var(--ocean-primary) 0%, var(--ocean-dark) 100%);
+   994	    color: white;
+   995	    padding: 16px 20px;
+   996	    border-radius: 8px 8px 0 0;
+   997	    margin: -20px -20px 16px -20px;
+   998	}
+   999	
+  1000	.equipment-table {
+  1001	    width: 100%;
+  1002	    overflow-x: auto;
+  1003	}
+  1004	
+  1005	.equipment-table table {
+  1006	    width: 100%;
+  1007	    border-collapse: collapse;
+  1008	    font-size: 12px;
+  1009	}
+  1010	
+  1011	.equipment-table th {
+  1012	    background: var(--ocean-light);
+  1013	    padding: 10px 8px;
+  1014	    border: 1px solid var(--border-color);
+  1015	    white-space: nowrap;
+  1016	    font-size: 11px;
+  1017	}
+  1018	
+  1019	.equipment-table td {
+  1020	    padding: 10px 8px;
+  1021	    border: 1px solid var(--border-color);
+  1022	    text-align: center;
+  1023	}
+  1024	
+  1025	.prescription-mask {
+  1026	    background: #FFA726;
+  1027	    color: white;
+  1028	    font-weight: bold;
+  1029	}
+  1030	
+  1031	/* ========== 分析 ========== */
+  1032	.ai-report-container {
+  1033	    background: white;
+  1034	    border-radius: 12px;
+  1035	    padding: 24px;
+  1036	    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  1037	}
+  1038	
+  1039	.report-header {
+  1040	    text-align: center;
+  1041	    margin-bottom: 32px;
+  1042	    padding-bottom: 24px;
+  1043	    border-bottom: 2px solid var(--ocean-light);
+  1044	}
+  1045	
+  1046	.report-header h3 {
+  1047	    font-size: 28px;
+  1048	    color: var(--ocean-dark);
+  1049	    margin-bottom: 12px;
+  1050	}
+  1051	
+  1052	.report-header p {
+  1053	    color: var(--text-light);
+  1054	    margin-bottom: 20px;
+  1055	}
+  1056	
+  1057	.ai-report-content {
+  1058	    max-width: 1000px;
+  1059	    margin: 0 auto;
+  1060	}
+  1061	
+  1062	.loading-state {
+  1063	    text-align: center;
+  1064	    padding: 60px 20px;
+  1065	    color: var(--text-light);
+  1066	    font-size: 18px;
+  1067	}
+  1068	
+  1069	.report-section {
+  1070	    background: #F8F9FA;
+  1071	    border-left: 4px solid var(--ocean-primary);
+  1072	    padding: 24px;
+  1073	    margin-bottom: 24px;
+  1074	    border-radius: 8px;
+  1075	    animation: fadeIn 0.5s;
+  1076	}
+  1077	
+  1078	.report-section h4 {
+  1079	    font-size: 20px;
+  1080	    color: var(--ocean-dark);
+  1081	    margin-bottom: 16px;
+  1082	    display: flex;
+  1083	    align-items: center;
+  1084	    gap: 12px;
+  1085	}
+  1086	
+  1087	.report-section .icon {
+  1088	    font-size: 28px;
+  1089	}
+  1090	
+  1091	.report-section p {
+  1092	    line-height: 1.8;
+  1093	    margin-bottom: 12px;
+  1094	    color: var(--text-dark);
+  1095	}
+  1096	
+  1097	.report-section ul {
+  1098	    list-style: none;
+  1099	    padding-left: 0;
+  1100	}
+  1101	
+  1102	.report-section li {
+  1103	    padding: 12px;
+  1104	    background: white;
+  1105	    margin-bottom: 8px;
+  1106	    border-radius: 6px;
+  1107	    border-left: 3px solid var(--ocean-accent);
+  1108	    line-height: 1.6;
+  1109	}
+  1110	
+  1111	.report-section li strong {
+  1112	    color: var(--ocean-primary);
+  1113	}
+  1114	
+  1115	.insight-box {
+  1116	    background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);
+  1117	    padding: 20px;
+  1118	    border-radius: 8px;
+  1119	    margin: 16px 0;
+  1120	    border-left: 4px solid var(--info);
+  1121	}
+  1122	
+  1123	.insight-box h5 {
+  1124	    color: var(--ocean-dark);
+  1125	    margin-bottom: 12px;
+  1126	    font-size: 16px;
+  1127	}
+  1128	
+  1129	.recommendation-box {
+  1130	    background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+  1131	    padding: 20px;
+  1132	    border-radius: 8px;
+  1133	    margin: 16px 0;
+  1134	    border-left: 4px solid var(--warning);
+  1135	}
+  1136	
+  1137	.recommendation-box h5 {
+  1138	    color: #92400E;
+  1139	    margin-bottom: 12px;
+  1140	    font-size: 16px;
+  1141	}
+  1142	
+  1143	.stat-grid {
+  1144	    display: grid;
+  1145	    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  1146	    gap: 16px;
+  1147	    margin: 20px 0;
+  1148	}
+  1149	
+  1150	.stat-card {
+  1151	    background: white;
+  1152	    padding: 16px;
+  1153	    border-radius: 8px;
+  1154	    text-align: center;
+  1155	    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  1156	}
+  1157	
+  1158	.stat-card .value {
+  1159	    font-size: 32px;
+  1160	    font-weight: bold;
+  1161	    color: var(--ocean-primary);
+  1162	    margin-bottom: 8px;
+  1163	}
+  1164	
+  1165	.stat-card .label {
+  1166	    font-size: 14px;
+  1167	    color: var(--text-light);
+  1168	}
+  1169	
+  1170	.tabs {
+  1171	    display: flex;
+  1172	    gap: 8px;
+  1173	    margin-bottom: 24px;
+  1174	    border-bottom: 2px solid var(--border-color);
+  1175	    overflow-x: auto;
+  1176	}
+  1177	
+  1178	.tab-btn {
+  1179	    padding: 12px 20px;
+  1180	    border: none;
+  1181	    background: transparent;
+  1182	    cursor: pointer;
+  1183	    font-size: 14px;
+  1184	    font-weight: 500;
+  1185	    color: var(--text-light);
+  1186	    border-bottom: 3px solid transparent;
+  1187	    transition: all 0.2s;
+  1188	    white-space: nowrap;
+  1189	}
+  1190	
+  1191	.tab-btn:hover {
+  1192	    color: var(--ocean-primary);
+  1193	}
+  1194	
+  1195	.tab-btn.active {
+  1196	    color: var(--ocean-primary);
+  1197	    border-bottom-color: var(--ocean-primary);
+  1198	}
+  1199	
+  1200	.tab-content {
+  1201	    display: none;
+  1202	}
+  1203	
+  1204	.tab-content.active {
+  1205	    display: block;
+  1206	    animation: fadeIn 0.3s;
+  1207	}
+  1208	
+  1209	.charts-grid {
+  1210	    display: grid;
+  1211	    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  1212	    gap: 24px;
+  1213	}
+  1214	
+  1215	.chart-card {
+  1216	    background: white;
+  1217	    border-radius: 12px;
+  1218	    padding: 20px;
+  1219	    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  1220	}
+  1221	
+  1222	/* ========== モーダル ========== */
+  1223	.modal {
+  1224	    display: none;
+  1225	    position: fixed;
+  1226	    top: 0;
+  1227	    left: 0;
+  1228	    right: 0;
+  1229	    bottom: 0;
+  1230	    background: rgba(0,0,0,0.5);
+  1231	    z-index: 1000;
+  1232	    align-items: center;
+  1233	    justify-content: center;
+  1234	    padding: 20px;
+  1235	}
+  1236	
+  1237	.modal.active {
+  1238	    display: flex;
+  1239	}
+  1240	
+  1241	.modal-content {
+  1242	    background: white;
+  1243	    border-radius: 12px;
+  1244	    max-width: 600px;
+  1245	    width: 100%;
+  1246	    max-height: 90vh;
+  1247	    overflow: auto;
+  1248	    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  1249	}
+  1250	
+  1251	.modal-content.modal-large {
+  1252	    max-width: min(1200px, 96vw);
+  1253	}
+  1254	
+  1255	.modal-header {
+  1256	    padding: 20px 24px;
+  1257	    border-bottom: 1px solid var(--border-color);
+  1258	    display: flex;
+  1259	    justify-content: space-between;
+  1260	    align-items: center;
+  1261	    background: var(--ocean-primary);
+  1262	    color: white;
+  1263	    border-radius: 12px 12px 0 0;
+  1264	}
+  1265	
+  1266	.modal-header h3 {
+  1267	    font-size: 20px;
+  1268	}
+  1269	
+  1270	.modal-close {
+  1271	    background: none;
+  1272	    border: none;
+  1273	    font-size: 28px;
+  1274	    color: white;
+  1275	    cursor: pointer;
+  1276	    width: 32px;
+  1277	    height: 32px;
+  1278	    display: flex;
+  1279	    align-items: center;
+  1280	    justify-content: center;
+  1281	    border-radius: 4px;
+  1282	    transition: background 0.2s;
+  1283	}
+  1284	
+  1285	.modal-close:hover {
+  1286	    background: rgba(255,255,255,0.2);
+  1287	}
+  1288	
+  1289	.modal-body {
+  1290	    padding: 24px;
+  1291	    max-height: calc(90vh - 80px);
+  1292	    overflow-y: auto;
+  1293	}
+  1294	
+  1295	/* ========== フォーム ========== */
+  1296	.form-grid {
+  1297	    display: grid;
+  1298	    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  1299	    gap: 16px;
+  1300	    margin-bottom: 20px;
+  1301	}
+  1302	
+  1303	.form-group {
+  1304	    display: flex;
+  1305	    flex-direction: column;
+  1306	}
+  1307	
+  1308	.form-group label {
+  1309	    font-size: 13px;
+  1310	    font-weight: 600;
+  1311	    margin-bottom: 6px;
+  1312	    color: var(--text-dark);
+  1313	}
+  1314	
+  1315	.form-group input,
+  1316	.form-group select,
+  1317	.form-group textarea {
+  1318	    padding: 10px 12px;
+  1319	    border: 1px solid var(--border-color);
+  1320	    border-radius: 6px;
+  1321	    font-size: 14px;
+  1322	    font-family: inherit;
+  1323	}
+  1324	
+  1325	.form-group textarea {
+  1326	    resize: vertical;
+  1327	}
+  1328	
+  1329	.participant-form {
+  1330	    background: #F8F9FA;
+  1331	    padding: 16px;
+  1332	    border-radius: 8px;
+  1333	    margin-bottom: 16px;
+  1334	    border-left: 4px solid var(--ocean-primary);
+  1335	}
+  1336	
+  1337	.form-actions {
+  1338	    display: flex;
+  1339	    gap: 12px;
+  1340	    justify-content: flex-end;
+  1341	    margin-top: 24px;
+  1342	    padding-top: 20px;
+  1343	    border-top: 1px solid var(--border-color);
+  1344	}
+  1345	
+  1346	/* 月別統計タブ専用スタイル */
+  1347	.monthly-stats-container {
+  1348	    padding: 20px;
+  1349	}
+  1350	
+  1351	/* ========== チーム分け表スタイル ========== */
+  1352	.team-controls {
+  1353	    display: flex;
+  1354	    gap: 15px;
+  1355	    margin-bottom: 30px;
+  1356	    padding: 20px;
+  1357	    background: white;
+  1358	    border-radius: 12px;
+  1359	    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  1360	}
+  1361	
+  1362	.staff-info-panel {
+  1363	    display: flex;
+  1364	    gap: 20px;
+  1365	    margin-bottom: 30px;
+  1366	}
+  1367	
+  1368	.staff-info-card {
+  1369	    flex: 1;
+  1370	    background: linear-gradient(135deg, #E3F9FA 0%, #D0F4F7 100%);
+  1371	    padding: 20px;
+  1372	    border-radius: 12px;
+  1373	    display: flex;
+  1374	    align-items: center;
+  1375	    gap: 15px;
+  1376	    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  1377	}
+  1378	
+  1379	.staff-info-card.alert-card {
+  1380	    background: linear-gradient(135deg, #FFE5E5 0%, #FFD1D1 100%);
+  1381	    animation: pulse 2s infinite;
+  1382	}
+  1383	
+  1384	@keyframes pulse {
+  1385	    0%, 100% { opacity: 1; }
+  1386	    50% { opacity: 0.8; }
+  1387	}
+  1388	
+  1389	.staff-icon {
+  1390	    font-size: 36px;
+  1391	}
+  1392	
+  1393	.staff-content {
+  1394	    flex: 1;
+  1395	}
+  1396	
+  1397	.staff-label {
+  1398	    font-size: 13px;
+  1399	    color: #6C757D;
+  1400	    margin-bottom: 5px;
+  1401	}
+  1402	
+  1403	.staff-count {
+  1404	    font-size: 24px;
+  1405	    font-weight: bold;
+  1406	    color: #0A9396;
+  1407	}
+  1408	
+  1409	.alert-card .staff-count {
+  1410	    color: #DC3545;
+  1411	}
+  1412	
+  1413	.team-assignment-header {
+  1414	    background: white;
+  1415	    padding: 25px;
+  1416	    border-radius: 12px;
+  1417	    margin-bottom: 20px;
+  1418	    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  1419	}
+  1420	
+  1421	.team-assignment-header h3 {
+  1422	    margin: 0 0 15px 0;
+  1423	    color: #005F73;
+  1424	}
+  1425	
+  1426	.team-summary {
+  1427	    display: flex;
+  1428	    gap: 30px;
+  1429	    font-size: 14px;
+  1430	    color: #6C757D;
+  1431	}
+  1432	
+  1433	.team-summary span {
+  1434	    font-weight: 600;
+  1435	}
+  1436	
+  1437	.team-list {
+  1438	    display: grid;
+  1439	    gap: 20px;
+  1440	}
+  1441	
+  1442	.team-card {
+  1443	    background: white;
+  1444	    border-radius: 12px;
+  1445	    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  1446	    overflow: hidden;
+  1447	    transition: all 0.3s;
+  1448	}
+  1449	
+  1450	.team-card:hover {
+  1451	    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  1452	    transform: translateY(-2px);
+  1453	}
+  1454	
+  1455	.team-card.needs-help {
+  1456	    border-left: 5px solid #FF8C00;
+  1457	}
+  1458	
+  1459	.team-card.has-young-child {
+  1460	    border-right: 5px solid #E1306C;
+  1461	}
+  1462	
+  1463	.team-header {
+  1464	    background: linear-gradient(135deg, #0A9396 0%, #005F73 100%);
+  1465	    color: white;
+  1466	    padding: 15px 20px;
+  1467	    display: flex;
+  1468	    align-items: center;
+  1469	    gap: 15px;
+  1470	    flex-wrap: wrap;
+  1471	}
+  1472	
+  1473	.team-number {
+  1474	    font-size: 18px;
+  1475	    font-weight: bold;
+  1476	}
+  1477	
+  1478	.team-time {
+  1479	    font-size: 14px;
+  1480	}
+  1481	
+  1482	.team-type {
+  1483	    padding: 4px 12px;
+  1484	    border-radius: 20px;
+  1485	    font-size: 12px;
+  1486	    font-weight: 600;
+  1487	}
+  1488	
+  1489	.team-type.private-tour {
+  1490	    background: #EE9B00;
+  1491	    color: white;
+  1492	}
+  1493	
+  1494	.team-type.group-tour {
+  1495	    background: rgba(255,255,255,0.3);
+  1496	    color: white;
+  1497	}
+  1498	
+  1499	.help-badge {
+  1500	    padding: 4px 12px;
+  1501	    background: #FF8C00;
+  1502	    color: white;
+  1503	    border-radius: 20px;
+  1504	    font-size: 12px;
+  1505	    font-weight: 600;
+  1506	}
+  1507	
+  1508	.young-child-badge {
+  1509	    padding: 4px 12px;
+  1510	    background: #E1306C;
+  1511	    color: white;
+  1512	    border-radius: 20px;
+  1513	    font-size: 12px;
+  1514	    font-weight: 600;
+  1515	}
+  1516	
+  1517	.team-body {
+  1518	    padding: 20px;
+  1519	}
+  1520	
+  1521	.team-info-row {
+  1522	    display: flex;
+  1523	    margin-bottom: 12px;
+  1524	    padding-bottom: 12px;
+  1525	    border-bottom: 1px solid #F0F0F0;
+  1526	}
+  1527	
+  1528	.team-info-row:last-of-type {
+  1529	    border-bottom: none;
+  1530	}
+  1531	
+  1532	.info-label {
+  1533	    width: 100px;
+  1534	    font-size: 13px;
+  1535	    color: #6C757D;
+  1536	    font-weight: 500;
+  1537	}
+  1538	
+  1539	.info-value {
+  1540	    flex: 1;
+  1541	    font-size: 14px;
+  1542	    color: #212529;
+  1543	    font-weight: 600;
+  1544	}
+  1545	
+  1546	.participants-summary {
+  1547	    margin: 20px 0;
+  1548	    padding: 15px;
+  1549	    background: #F8F9FA;
+  1550	    border-radius: 8px;
+  1551	}
+  1552	
+  1553	.age-groups {
+  1554	    display: flex;
+  1555	    flex-wrap: wrap;
+  1556	    gap: 8px;
+  1557	    margin-bottom: 12px;
+  1558	}
+  1559	
+  1560	.age-group-badge {
+  1561	    padding: 4px 10px;
+  1562	    background: white;
+  1563	    border: 1px solid #DEE2E6;
+  1564	    border-radius: 16px;
+  1565	    font-size: 12px;
+  1566	    color: #495057;
+  1567	}
+  1568	
+  1569	.participant-list {
+  1570	    display: flex;
+  1571	    flex-wrap: wrap;
+  1572	    gap: 8px;
+  1573	}
+  1574	
+  1575	.participant-item {
+  1576	    padding: 4px 10px;
+  1577	    background: white;
+  1578	    border-radius: 6px;
+  1579	    font-size: 12px;
+  1580	    color: #212529;
+  1581	}
+  1582	
+  1583	.guide-assignment {
+  1584	    display: grid;
+  1585	    grid-template-columns: repeat(2, 1fr);
+  1586	    gap: 15px;
+  1587	    margin-top: 20px;
+  1588	    padding-top: 20px;
+  1589	    border-top: 2px solid #0A9396;
+  1590	}
+  1591	
+  1592	.guide-input-group {
+  1593	    display: flex;
+  1594	    flex-direction: column;
+  1595	    gap: 8px;
+  1596	}
+  1597	
+  1598	.guide-input-group label {
+  1599	    font-size: 13px;
+  1600	    font-weight: 600;
+  1601	    color: #005F73;
+  1602	}
+  1603	
+  1604	.guide-input {
+  1605	    padding: 10px 12px;
+  1606	    border: 2px solid #DEE2E6;
+  1607	    border-radius: 8px;
+  1608	    font-size: 14px;
+  1609	    transition: all 0.3s;
+  1610	}
+  1611	
+  1612	.guide-input:focus {
+  1613	    outline: none;
+  1614	    border-color: #0A9396;
+  1615	    box-shadow: 0 0 0 3px rgba(10, 147, 150, 0.1);
+  1616	}
+  1617	
+  1618	/* ガイド担当表示（上部配置） */
+  1619	.guide-assignment-top {
+  1620	    background: linear-gradient(135deg, #E3F9FA 0%, #D0F4F7 100%);
+  1621	    padding: 15px;
+  1622	    border-radius: 8px;
+  1623	    margin-bottom: 20px;
+  1624	    display: flex;
+  1625	    flex-direction: column;
+  1626	    gap: 12px;
+  1627	}
+  1628	
+  1629	.guide-display-row {
+  1630	    display: flex;
+  1631	    align-items: center;
+  1632	    gap: 12px;
+  1633	}
+  1634	
+  1635	.guide-role {
+  1636	    font-size: 14px;
+  1637	    font-weight: 600;
+  1638	    color: #005F73;
+  1639	    min-width: 120px;
+  1640	}
+  1641	
+  1642	.guide-input-inline {
+  1643	    flex: 1;
+  1644	    padding: 8px 12px;
+  1645	    border: 2px solid #0A9396;
+  1646	    border-radius: 6px;
+  1647	    font-size: 14px;
+  1648	    font-weight: 600;
+  1649	    background: white;
+  1650	    transition: all 0.3s;
+  1651	}
+  1652	
+  1653	.guide-input-inline:focus {
+  1654	    outline: none;
+  1655	    border-color: #005F73;
+  1656	    box-shadow: 0 0 0 3px rgba(10, 147, 150, 0.15);
+  1657	}
+  1658	
+  1659	/* 予約情報リスト */
+  1660	.reservations-list {
+  1661	    margin-bottom: 20px;
+  1662	}
+  1663	
+  1664	.reservation-items {
+  1665	    display: flex;
+  1666	    flex-direction: column;
+  1667	    gap: 12px;
+  1668	}
+  1669	
+  1670	.reservation-item {
+  1671	    background: #F8F9FA;
+  1672	    padding: 12px;
+  1673	    border-radius: 8px;
+  1674	    border-left: 3px solid #0A9396;
+  1675	}
+  1676	
+  1677	.reservation-header {
+  1678	    display: flex;
+  1679	    align-items: center;
+  1680	    gap: 12px;
+  1681	    margin-bottom: 8px;
+  1682	    flex-wrap: wrap;
+  1683	}
+  1684	
+  1685	.reservation-number {
+  1686	    font-size: 13px;
+  1687	    font-weight: 600;
+  1688	    color: #0A9396;
+  1689	}
+  1690	
+  1691	.reservation-customer {
+  1692	    font-size: 14px;
+  1693	    font-weight: 600;
+  1694	    color: #212529;
+  1695	}
+  1696	
+  1697	.reservation-count {
+  1698	    font-size: 13px;
+  1699	    padding: 2px 8px;
+  1700	    background: white;
+  1701	    border-radius: 12px;
+  1702	    color: #6C757D;
+  1703	}
+  1704	
+  1705	.reservation-participants {
+  1706	    display: flex;
+  1707	    flex-wrap: wrap;
+  1708	    gap: 6px;
+  1709	}
+  1710	
+  1711	.participant-tag {
+  1712	    padding: 3px 8px;
+  1713	    background: white;
+  1714	    border-radius: 4px;
+  1715	    font-size: 12px;
+  1716	    color: #495057;
+  1717	    border: 1px solid #DEE2E6;
+  1718	}
+  1719	
+  1720	/* チーム統計 */
+  1721	.team-stats {
+  1722	    display: flex;
+  1723	    gap: 20px;
+  1724	    margin-bottom: 20px;
+  1725	    padding: 15px;
+  1726	    background: linear-gradient(135deg, #FFF9E6 0%, #FFF3CC 100%);
+  1727	    border-radius: 8px;
+  1728	}
+  1729	
+  1730	.stat-item {
+  1731	    display: flex;
+  1732	    flex-direction: column;
+  1733	    gap: 5px;
+  1734	}
+  1735	
+  1736	.stat-label {
+  1737	    font-size: 12px;
+  1738	    color: #6C757D;
+  1739	}
+  1740	
+  1741	.stat-value {
+  1742	    font-size: 20px;
+  1743	    font-weight: bold;
+  1744	    color: #0A9396;
+  1745	}
+  1746	
+  1747	.no-data {
+  1748	    text-align: center;
+  1749	    padding: 60px 20px;
+  1750	    color: #6C757D;
+  1751	    font-size: 16px;
+  1752	}
+  1753	
+  1754	/* ========== ガイド実績分析スタイル ========== */
+  1755	.guide-analysis-header {
+  1756	    background: white;
+  1757	    padding: 25px;
+  1758	    border-radius: 12px;
+  1759	    margin-bottom: 20px;
+  1760	    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  1761	}
+  1762	
+  1763	.guide-analysis-header h3 {
+  1764	    margin: 0 0 10px 0;
+  1765	    color: #005F73;
+  1766	}
+  1767	
+  1768	.analysis-note {
+  1769	    margin: 0;
+  1770	    color: #6C757D;
+  1771	    font-size: 14px;
+  1772	}
+  1773	
+  1774	.guide-summary-grid {
+  1775	    display: grid;
+  1776	    grid-template-columns: repeat(4, 1fr);
+  1777	    gap: 20px;
+  1778	    margin-bottom: 30px;
+  1779	}
+  1780	
+  1781	.guide-summary-card {
+  1782	    background: linear-gradient(135deg, #E3F9FA 0%, #D0F4F7 100%);
+  1783	    padding: 20px;
+  1784	    border-radius: 12px;
+  1785	    display: flex;
+  1786	    align-items: center;
+  1787	    gap: 15px;
+  1788	    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  1789	}
+  1790	
+  1791	.guide-stats-grid {
+  1792	    display: grid;
+  1793	    gap: 20px;
+  1794	    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  1795	}
+  1796	
+  1797	.guide-stat-card {
+  1798	    background: white;
+  1799	    border-radius: 12px;
+  1800	    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  1801	    overflow: hidden;
+  1802	}
+  1803	
+  1804	.guide-stat-card.rank-1 {
+  1805	    border-top: 4px solid #FFD700;
+  1806	}
+  1807	
+  1808	.guide-stat-card.rank-2 {
+  1809	    border-top: 4px solid #C0C0C0;
+  1810	}
+  1811	
+  1812	.guide-stat-card.rank-3 {
+  1813	    border-top: 4px solid #CD7F32;
+  1814	}
+  1815	
+  1816	.guide-stat-header {
+  1817	    background: linear-gradient(135deg, #0A9396 0%, #005F73 100%);
+  1818	    color: white;
+  1819	    padding: 15px 20px;
+  1820	    display: flex;
+  1821	    align-items: center;
+  1822	    gap: 12px;
+  1823	}
+  1824	
+  1825	.guide-rank {
+  1826	    font-size: 20px;
+  1827	    font-weight: bold;
+  1828	    min-width: 40px;
+  1829	}
+  1830	
+  1831	.guide-name {
+  1832	    font-size: 18px;
+  1833	    font-weight: bold;
+  1834	}
+  1835	
+  1836	.guide-stat-body {
+  1837	    padding: 20px;
+  1838	}
+  1839	
+  1840	.stat-main {
+  1841	    background: linear-gradient(135deg, #FFF9E6 0%, #FFF3CC 100%);
+  1842	    padding: 20px;
+  1843	    border-radius: 8px;
+  1844	    text-align: center;
+  1845	    margin-bottom: 20px;
+  1846	}
+  1847	
+  1848	.stat-main-label {
+  1849	    font-size: 13px;
+  1850	    color: #6C757D;
+  1851	    margin-bottom: 8px;
+  1852	}
+  1853	
+  1854	.stat-main-value {
+  1855	    font-size: 36px;
+  1856	    font-weight: bold;
+  1857	    color: #0A9396;
+  1858	}
+  1859	
+  1860	.stat-row {
+  1861	    display: grid;
+  1862	    grid-template-columns: repeat(2, 1fr);
+  1863	    gap: 15px;
+  1864	    margin-bottom: 15px;
+  1865	}
+  1866	
+  1867	.stat-col {
+  1868	    display: flex;
+  1869	    flex-direction: column;
+  1870	    gap: 5px;
+  1871	}
+  1872	
+  1873	.stat-label {
+  1874	    font-size: 12px;
+  1875	    color: #6C757D;
+  1876	}
+  1877	
+  1878	.stat-value {
+  1879	    font-size: 16px;
+  1880	    font-weight: 600;
+  1881	    color: #212529;
+  1882	}
+  1883	
+  1884	.tour-types {
+  1885	    margin: 20px 0;
+  1886	    padding: 15px;
+  1887	    background: #F8F9FA;
+  1888	    border-radius: 8px;
+  1889	}
+  1890	
+  1891	.tour-types-label {
+  1892	    font-size: 12px;
+  1893	    color: #6C757D;
+  1894	    margin-bottom: 8px;
+  1895	}
+  1896	
+  1897	.tour-types-list {
+  1898	    display: flex;
+  1899	    flex-wrap: wrap;
+  1900	    gap: 6px;
+  1901	}
+  1902	
+  1903	.tour-type-tag {
+  1904	    padding: 4px 10px;
+  1905	    background: white;
+  1906	    border-radius: 12px;
+  1907	    font-size: 12px;
+  1908	    color: #495057;
+  1909	    border: 1px solid #DEE2E6;
+  1910	}
+  1911	
+  1912	.monthly-breakdown {
+  1913	    margin-top: 20px;
+  1914	    padding-top: 20px;
+  1915	    border-top: 1px solid #DEE2E6;
+  1916	}
+  1917	
+  1918	.monthly-label {
+  1919	    font-size: 13px;
+  1920	    color: #6C757D;
+  1921	    margin-bottom: 12px;
+  1922	}
+  1923	
+  1924	.monthly-bars {
+  1925	    display: flex;
+  1926	    gap: 8px;
+  1927	    align-items: flex-end;
+  1928	    height: 80px;
+  1929	}
+  1930	
+  1931	.monthly-bar-item {
+  1932	    flex: 1;
+  1933	    display: flex;
+  1934	    flex-direction: column;
+  1935	    align-items: center;
+  1936	    gap: 4px;
+  1937	}
+  1938	
+  1939	.monthly-bar-container {
+  1940	    width: 100%;
+  1941	    height: 60px;
+  1942	    display: flex;
+  1943	    align-items: flex-end;
+  1944	}
+  1945	
+  1946	.monthly-bar {
+  1947	    width: 100%;
+  1948	    background: linear-gradient(to top, #0A9396, #94D2BD);
+  1949	    border-radius: 4px 4px 0 0;
+  1950	    transition: all 0.3s;
+  1951	}
+  1952	
+  1953	.monthly-bar:hover {
+  1954	    opacity: 0.8;
+  1955	}
+  1956	
+  1957	.monthly-bar-label {
+  1958	    font-size: 10px;
+  1959	    color: #6C757D;
+  1960	}
+  1961	
+  1962	.monthly-bar-count {
+  1963	    font-size: 11px;
+  1964	    font-weight: 600;
+  1965	    color: #0A9396;
+  1966	}
+  1967	
+  1968	/* 月別統計タブ専用スタイル（既存） */
+  1969	
+  1970	.stats-month-header {
+  1971	    display: flex;
+  1972	    align-items: center;
+  1973	    justify-content: center;
+  1974	    gap: 15px;
+  1975	    padding: 20px;
+  1976	    background: linear-gradient(135deg, #0A9396 0%, #005F73 100%);
+  1977	    color: white;
+  1978	    border-radius: 12px;
+  1979	    margin-bottom: 30px;
+  1980	}
+  1981	
+  1982	.month-selector {
+  1983	    display: flex;
+  1984	    align-items: center;
+  1985	    gap: 8px;
+  1986	    font-size: 18px;
+  1987	    font-weight: bold;
+  1988	}
+  1989	
+  1990	.month-selector input {
+  1991	    width: 70px;
+  1992	    padding: 8px;
+  1993	    font-size: 16px;
+  1994	    font-weight: bold;
+  1995	    text-align: center;
+  1996	    border: none;
+  1997	    border-radius: 6px;
+  1998	    background: white;
+  1999	}
+  2000	
+  2001	.month-selector span {
+  2002	    font-size: 16px;
+  2003	}
+  2004	
+  2005	.stats-kpi-grid {
+  2006	    display: grid;
+  2007	    grid-template-columns: repeat(4, 1fr);
+  2008	    gap: 20px;
+  2009	    margin-bottom: 30px;
+  2010	}
+  2011	
+  2012	.stats-kpi-card {
+  2013	    background: linear-gradient(135deg, #E3F9FA 0%, #D0F4F7 100%);
+  2014	    padding: 25px;
+  2015	    border-radius: 12px;
+  2016	    text-align: center;
+  2017	    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  2018	}
+  2019	
+  2020	.stats-kpi-card .kpi-label {
+  2021	    font-size: 14px;
+  2022	    color: #005F73;
+  2023	    margin-bottom: 10px;
+  2024	    font-weight: 500;
+  2025	}
+  2026	
+  2027	.stats-kpi-card .kpi-value {
+  2028	    font-size: 36px;
+  2029	    font-weight: bold;
+  2030	    color: #0A9396;
+  2031	    margin-bottom: 5px;
+  2032	}
+  2033	
+  2034	.stats-kpi-card .kpi-sublabel {
+  2035	    font-size: 12px;
+  2036	    color: #6C757D;
+  2037	}
+  2038	
+  2039	.stats-rate-grid {
+  2040	    display: grid;
+  2041	    grid-template-columns: repeat(2, 1fr);
+  2042	    gap: 20px;
+  2043	    margin-bottom: 30px;
+  2044	}
+  2045	
+  2046	.stats-rate-card {
+  2047	    background: white;
+  2048	    padding: 25px;
+  2049	    border-radius: 12px;
+  2050	    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  2051	}
+  2052	
+  2053	.stats-rate-card .rate-label {
+  2054	    font-size: 14px;
+  2055	    color: #6C757D;
+  2056	    margin-bottom: 10px;
+  2057	}
+  2058	
+  2059	.stats-rate-card .rate-value {
+  2060	    font-size: 32px;
+  2061	    font-weight: bold;
+  2062	    color: #0A9396;
+  2063	    margin-bottom: 8px;
+  2064	}
+  2065	
+  2066	.stats-rate-card .rate-formula {
+  2067	    font-size: 11px;
+  2068	    color: #ADB5BD;
+  2069	    font-style: italic;
+  2070	}
+  2071	
+  2072	.stats-summary-grid {
+  2073	    display: grid;
+  2074	    grid-template-columns: repeat(3, 1fr);
+  2075	    gap: 20px;
+  2076	    margin-bottom: 40px;
+  2077	}
+  2078	
+  2079	.stats-summary-card {
+  2080	    background: linear-gradient(135deg, #FFF9E6 0%, #FFF3CC 100%);
+  2081	    padding: 25px;
+  2082	    border-radius: 12px;
+  2083	    display: flex;
+  2084	    align-items: center;
+  2085	    gap: 20px;
+  2086	    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  2087	}
+  2088	
+  2089	.stats-summary-card .summary-icon {
+  2090	    font-size: 42px;
+  2091	}
+  2092	
+  2093	.stats-summary-card .summary-label {
+  2094	    font-size: 13px;
+  2095	    color: #6C757D;
+  2096	    margin-bottom: 8px;
+  2097	}
+  2098	
+  2099	.stats-summary-card .summary-value {
+  2100	    font-size: 28px;
+  2101	    font-weight: bold;
+  2102	    color: #0A9396;
+  2103	}
+  2104	
+  2105	/* セクションタイトル */
+  2106	.stats-section-title {
+  2107	    font-size: 18px;
+  2108	    font-weight: bold;
+  2109	    color: #005F73;
+  2110	    margin: 40px 0 20px 0;
+  2111	    padding-bottom: 10px;
+  2112	    border-bottom: 3px solid #0A9396;
+  2113	}
+  2114	
+  2115	/* マーケティング指標グリッド */
+  2116	.stats-marketing-grid {
+  2117	    display: grid;
+  2118	    grid-template-columns: repeat(4, 1fr);
+  2119	    gap: 20px;
+  2120	    margin-bottom: 40px;
+  2121	}
+  2122	
+  2123	.stats-metric-card {
+  2124	    background: white;
+  2125	    padding: 20px;
+  2126	    border-radius: 12px;
+  2127	    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  2128	    display: flex;
+  2129	    gap: 15px;
+  2130	    align-items: center;
+  2131	}
+  2132	
+  2133	.stats-metric-card .metric-icon {
+  2134	    font-size: 36px;
+  2135	    flex-shrink: 0;
+  2136	}
+  2137	
+  2138	.stats-metric-card .metric-content {
+  2139	    flex: 1;
+  2140	}
+  2141	
+  2142	.stats-metric-card .metric-label {
+  2143	    font-size: 12px;
+  2144	    color: #6C757D;
+  2145	    margin-bottom: 8px;
+  2146	}
+  2147	
+  2148	.stats-metric-card .metric-value {
+  2149	    font-size: 24px;
+  2150	    font-weight: bold;
+  2151	    color: #0A9396;
+  2152	    margin-bottom: 5px;
+  2153	}
+  2154	
+  2155	.stats-metric-card .metric-detail {
+  2156	    font-size: 11px;
+  2157	    color: #ADB5BD;
+  2158	}
+  2159	
+  2160	/* 集客チャネル分析 */
+  2161	.stats-channel-grid {
+  2162	    display: grid;
+  2163	    grid-template-columns: repeat(2, 1fr);
+  2164	    gap: 20px;
+  2165	    margin-bottom: 40px;
+  2166	}
+  2167	
+  2168	.channel-card {
+  2169	    background: white;
+  2170	    padding: 20px;
+  2171	    border-radius: 12px;
+  2172	    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  2173	}
+  2174	
+  2175	.channel-header {
+  2176	    display: flex;
+  2177	    justify-content: space-between;
+  2178	    align-items: center;
+  2179	    margin-bottom: 12px;
+  2180	}
+  2181	
+  2182	.channel-name {
+  2183	    font-size: 14px;
+  2184	    font-weight: 600;
+  2185	    color: #212529;
+  2186	}
+  2187	
+  2188	.channel-count {
+  2189	    font-size: 18px;
+  2190	    font-weight: bold;
+  2191	    color: #0A9396;
+  2192	}
+  2193	
+  2194	.channel-bar {
+  2195	    height: 12px;
+  2196	    background: #F0F0F0;
+  2197	    border-radius: 6px;
+  2198	    overflow: hidden;
+  2199	    margin-bottom: 10px;
+  2200	}
+  2201	
+  2202	.channel-bar-fill {
+  2203	    height: 100%;
+  2204	    transition: width 0.3s ease;
+  2205	}
+  2206	
+  2207	.channel-stats {
+  2208	    display: flex;
+  2209	    justify-content: space-between;
+  2210	    font-size: 12px;
+  2211	    color: #6C757D;
+  2212	}
+  2213	
+  2214	/* 予約タイミング分析 */
+  2215	.stats-timing-grid {
+  2216	    display: grid;
+  2217	    grid-template-columns: repeat(4, 1fr);
+  2218	    gap: 20px;
+  2219	    margin-bottom: 40px;
+  2220	}
+  2221	
+  2222	.timing-card {
+  2223	    background: linear-gradient(135deg, #E8F4F8 0%, #D1E7F0 100%);
+  2224	    padding: 20px;
+  2225	    border-radius: 12px;
+  2226	    text-align: center;
+  2227	    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  2228	}
+  2229	
+  2230	.timing-label {
+  2231	    font-size: 12px;
+  2232	    color: #005F73;
+  2233	    margin-bottom: 12px;
+  2234	    font-weight: 500;
+  2235	}
+  2236	
+  2237	.timing-value {
+  2238	    font-size: 28px;
+  2239	    font-weight: bold;
+  2240	    color: #0A9396;
+  2241	    margin-bottom: 8px;
+  2242	}
+  2243	
+  2244	.timing-rate {
+  2245	    font-size: 14px;
+  2246	    color: #6C757D;
+  2247	    font-weight: 600;
+  2248	}
+  2249	
+  2250	/* ========== 印刷用スタイル ========== */
+  2251	@media print {
+  2252	    .sidebar,
+  2253	    .equipment-controls,
+  2254	    .btn {
+  2255	        display: none !important;
+  2256	    }
+  2257	    
+  2258	    .main-content {
+  2259	        margin-left: 0;
+  2260	    }
+  2261	    
+  2262	    .equipment-team {
+  2263	        page-break-after: always;
+  2264	    }
+  2265	    
+  2266	    body {
+  2267	        background: white;
+  2268	    }
+  2269	}
+  2270	
+  2271	/* ========== チーム分けモード切替 ========== */
+  2272	.team-mode-toggle {
+  2273	    display: flex;
+  2274	    align-items: center;
+  2275	    gap: 15px;
+  2276	    margin: 20px 0;
+  2277	    padding: 20px;
+  2278	    background: white;
+  2279	    border-radius: 12px;
+  2280	    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  2281	}
+  2282	
+  2283	.mode-btn {
+  2284	    padding: 12px 24px;
+  2285	    font-size: 16px;
+  2286	    font-weight: 600;
+  2287	    border: 2px solid var(--border-color);
+  2288	    background: white;
+  2289	    color: var(--text-light);
+  2290	    border-radius: 8px;
+  2291	    cursor: pointer;
+  2292	    transition: all 0.3s ease;
+  2293	}
+  2294	
+  2295	.mode-btn:hover {
+  2296	    background: var(--ocean-light);
+  2297	    border-color: var(--ocean-primary);
+  2298	}
+  2299	
+  2300	.mode-btn.active {
+  2301	    background: var(--ocean-primary);
+  2302	    color: white;
+  2303	    border-color: var(--ocean-primary);
+  2304	}
+  2305	
+  2306	.mode-description {
+  2307	    flex: 1;
+  2308	    margin-left: 15px;
+  2309	}
+  2310	
+  2311	.mode-desc {
+  2312	    margin: 0;
+  2313	    padding: 10px;
+  2314	    background: #f8f9fa;
+  2315	    border-left: 4px solid var(--ocean-primary);
+  2316	    border-radius: 4px;
+  2317	    font-size: 14px;
+  2318	    color: var(--text-dark);
+  2319	    display: none;
+  2320	}
+  2321	
+  2322	.mode-desc.active {
+  2323	    display: block;
+  2324	}
+  2325	
+  2326	/* ========== ガイド実績分析 ========== */
+  2327	.guide-performance-header {
+  2328	    background: linear-gradient(135deg, var(--ocean-primary) 0%, var(--ocean-dark) 100%);
+  2329	    color: white;
+  2330	    padding: 25px;
+  2331	    border-radius: 12px;
+  2332	    margin-bottom: 20px;
+  2333	}
+  2334	
+  2335	.guide-performance-header h3 {
+  2336	    margin: 0 0 10px 0;
+  2337	    font-size: 24px;
+  2338	}
+  2339	
+  2340	.performance-summary {
+  2341	    display: flex;
+  2342	    gap: 20px;
+  2343	    font-size: 16px;
+  2344	}
+  2345	
+  2346	.performance-summary span {
+  2347	    padding: 8px 15px;
+  2348	    background: rgba(255,255,255,0.2);
+  2349	    border-radius: 6px;
+  2350	}
+  2351	
+  2352	.date-range-selector {
+  2353	    display: flex;
+  2354	    align-items: center;
+  2355	    gap: 10px;
+  2356	    padding: 20px;
+  2357	    background: white;
+  2358	    border-radius: 12px;
+  2359	    margin-bottom: 20px;
+  2360	    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  2361	}
+  2362	
+  2363	.date-range-selector label {
+  2364	    font-weight: 600;
+  2365	    color: var(--text-dark);
+  2366	}
+  2367	
+  2368	.guide-stats-table-container {
+  2369	    background: white;
+  2370	    border-radius: 12px;
+  2371	    padding: 20px;
+  2372	    margin-bottom: 20px;
+  2373	    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  2374	    overflow-x: auto;
+  2375	}
+  2376	
+  2377	.guide-stats-table {
+  2378	    width: 100%;
+  2379	    border-collapse: collapse;
+  2380	}
+  2381	
+  2382	.guide-stats-table th {
+  2383	    background: var(--ocean-light);
+  2384	    color: var(--text-dark);
+  2385	    padding: 12px;
+  2386	    text-align: left;
+  2387	    font-weight: 600;
+  2388	    border-bottom: 2px solid var(--ocean-primary);
+  2389	}
+  2390	
+  2391	.guide-stats-table td {
+  2392	    padding: 12px;
+  2393	    border-bottom: 1px solid var(--border-color);
+  2394	}
+  2395	
+  2396	.guide-stats-table tbody tr:hover {
+  2397	    background: #f8f9fa;
+  2398	}
+  2399	
+  2400	.role-badge {
+  2401	    display: inline-block;
+  2402	    padding: 4px 10px;
+  2403	    border-radius: 12px;
+  2404	    font-size: 12px;
+  2405	    font-weight: 600;
+  2406	}
+  2407	
+  2408	.role-badge.main-guide {
+  2409	    background: rgba(54, 162, 235, 0.2);
+  2410	    color: rgb(54, 162, 235);
+  2411	}
+  2412	
+  2413	.role-badge.helper {
+  2414	    background: rgba(255, 206, 86, 0.2);
+  2415	    color: rgb(255, 159, 64);
+  2416	}
+  2417	
+  2418	.guide-charts-container {
+  2419	    display: grid;
+  2420	    grid-template-columns: repeat(2, 1fr);
+  2421	    gap: 20px;
+  2422	    margin-top: 20px;
+  2423	}
+  2424	
+  2425	.guide-charts-container .chart-card {
+  2426	    background: white;
+  2427	    border-radius: 12px;
+  2428	    padding: 20px;
+  2429	    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  2430	}
+  2431	
+  2432	.guide-charts-container .chart-card h4 {
+  2433	    margin: 0 0 15px 0;
+  2434	    color: var(--text-dark);
+  2435	    font-size: 18px;
+  2436	}
+  2437	
+  2438	/* ========== レスポンシブ ========== */
+  2439	@media (max-width: 1024px) {
+  2440	    .sidebar {
+  2441	        width: 220px;
+  2442	    }
+  2443	    
+  2444	    .stats-kpi-grid {
+  2445	        grid-template-columns: repeat(2, 1fr);
+  2446	    }
+  2447	    
+  2448	    .stats-rate-grid {
+  2449	        grid-template-columns: 1fr;
+  2450	    }
+  2451	    
+  2452	    .stats-marketing-grid {
+  2453	        grid-template-columns: repeat(2, 1fr);
+  2454	    }
+  2455	    
+  2456	    .stats-timing-grid {
+  2457	        grid-template-columns: repeat(2, 1fr);
+  2458	    }
+  2459	    
+  2460	    .main-content {
+  2461	        margin-left: 220px;
+  2462	        padding: 20px;
+  2463	    }
+  2464	    
+  2465	    .kpi-grid {
+  2466	        grid-template-columns: repeat(2, 1fr);
+  2467	    }
+  2468	    
+  2469	    .charts-grid {
+  2470	        grid-template-columns: 1fr;
+  2471	    }
+  2472	    
+  2473	    /* ガイド実績 */
+  2474	    .guide-charts-container {
+  2475	        grid-template-columns: 1fr;
+  2476	    }
+  2477	}
+  2478	
+  2479	@media (max-width: 768px) {
+  2480	    body {
+  2481	        flex-direction: column;
+  2482	    }
+  2483	    
+  2484	    /* チーム分けレスポンシブ */
+  2485	    .staff-info-panel {
+  2486	        flex-direction: column;
+  2487	    }
+  2488	    
+  2489	    .team-controls {
+  2490	        flex-direction: column;
+  2491	    }
+  2492	    
+  2493	    .guide-assignment {
+  2494	        grid-template-columns: 1fr;
+  2495	    }
+  2496	    
+  2497	    /* 月別統計レスポンシブ */
+  2498	    .stats-kpi-grid {
+  2499	        grid-template-columns: 1fr;
+  2500	    }
+  2501	    
+  2502	    .stats-summary-grid {
+  2503	        grid-template-columns: 1fr;
+  2504	    }
+  2505	    
+  2506	    .stats-marketing-grid {
+  2507	        grid-template-columns: 1fr;
+  2508	    }
+  2509	    
+  2510	    .stats-channel-grid {
+  2511	        grid-template-columns: 1fr;
+  2512	    }
+  2513	    
+  2514	    .stats-timing-grid {
+  2515	        grid-template-columns: 1fr;
+  2516	    }
+  2517	    
+  2518	    .stats-month-header {
+  2519	        flex-wrap: wrap;
+  2520	        padding: 15px;
+  2521	    }
+  2522	    
+  2523	    .month-selector {
+  2524	        font-size: 16px;
+  2525	    }
+  2526	    
+  2527	    .month-selector input {
+  2528	        width: 60px;
+  2529	        font-size: 14px;
+  2530	    }
+  2531	    
+  2532	    /* モバイルヘッダー */
+  2533	    .mobile-header {
+  2534	        display: flex;
+  2535	        justify-content: space-between;
+  2536	        align-items: center;
+  2537	        padding: 16px;
+  2538	        background: var(--ocean-primary);
+  2539	        color: white;
+  2540	        position: fixed;
+  2541	        top: 0;
+  2542	        left: 0;
+  2543	        right: 0;
+  2544	        z-index: 200;
+  2545	        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  2546	    }
+  2547	    
+  2548	    .mobile-header h1 {
+  2549	        font-size: 18px;
+  2550	        margin: 0;
+  2551	    }
+  2552	    
+  2553	    .mobile-menu-btn {
+  2554	        background: none;
+  2555	        border: none;
+  2556	        color: white;
+  2557	        font-size: 28px;
+  2558	        cursor: pointer;
+  2559	        padding: 4px 8px;
+  2560	    }
+  2561	    
+  2562	    /* サイドバーをハンバーガーメニュー化 */
+  2563	    .sidebar {
+  2564	        position: fixed;
+  2565	        left: -100%;
+  2566	        top: 0;
+  2567	        width: 280px;
+  2568	        height: 100vh;
+  2569	        transition: left 0.3s ease;
+  2570	        z-index: 300;
+  2571	        box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+  2572	    }
+  2573	    
+  2574	    .sidebar.active {
+  2575	        left: 0;
+  2576	    }
+  2577	    
+  2578	    .sidebar-overlay {
+  2579	        display: none;
+  2580	        position: fixed;
+  2581	        top: 0;
+  2582	        left: 0;
+  2583	        right: 0;
+  2584	        bottom: 0;
+  2585	        background: rgba(0,0,0,0.5);
+  2586	        z-index: 250;
+  2587	    }
+  2588	    
+  2589	    .sidebar-overlay.active {
+  2590	        display: block;
+  2591	    }
+  2592	    
+  2593	    .sidebar-close {
+  2594	        display: block;
+  2595	        position: absolute;
+  2596	        top: 16px;
+  2597	        right: 16px;
+  2598	        background: none;
+  2599	        border: none;
+  2600	        color: white;
+  2601	        font-size: 32px;
+  2602	        cursor: pointer;
+  2603	    }
+  2604	    
+  2605	    /* メインコンテンツ */
+  2606	    .main-content {
+  2607	        margin-left: 0;
+  2608	        margin-top: 64px;
+  2609	        padding: 16px;
+  2610	        width: 100%;
+  2611	    }
+  2612	    
+  2613	    /* 天気ウィジェット（モバイル） */
+  2614	    .weather-widget {
+  2615	        padding: 16px;
+  2616	    }
+  2617	    
+  2618	    .weather-icon-large {
+  2619	        font-size: 48px;
+  2620	    }
+  2621	    
+  2622	    .weather-temp-large {
+  2623	        font-size: 36px;
+  2624	    }
+  2625	    
+  2626	    .weather-details {
+  2627	        grid-template-columns: 1fr;
+  2628	        gap: 12px;
+  2629	    }
+  2630	    
+  2631	    .weather-actions {
+  2632	        flex-direction: column;
+  2633	    }
+  2634	    
+  2635	    .tide-section {
+  2636	        padding: 12px;
+  2637	    }
+  2638	    
+  2639	    .tide-label, .tide-times {
+  2640	        font-size: 13px;
+  2641	    }
+  2642	    
+  2643	    /* KPIカード */
+  2644	    .kpi-grid {
+  2645	        grid-template-columns: 1fr;
+  2646	        gap: 12px;
+  2647	    }
+  2648	    
+  2649	    .kpi-card {
+  2650	        padding: 16px;
+  2651	    }
+  2652	    
+  2653	    .kpi-value {
+  2654	        font-size: 36px;
+  2655	    }
+  2656	    
+  2657	    .kpi-value.revenue {
+  2658	        font-size: clamp(20px, 8vw, 36px);
+  2659	    }
+  2660	    
+  2661	    /* ページタイトル */
+  2662	    .page-title {
+  2663	        font-size: 24px;
+  2664	        margin-bottom: 16px;
+  2665	    }
+  2666	    
+  2667	    /* ページヘッダー */
+  2668	    .page-header {
+  2669	        flex-direction: column;
+  2670	        align-items: stretch;
+  2671	        gap: 12px;
+  2672	    }
+  2673	    
+  2674	    .page-header .btn {
+  2675	        width: 100%;
+  2676	    }
+  2677	    
+  2678	    /* フィルター */
+  2679	    .filters {
+  2680	        flex-direction: column;
+  2681	        gap: 12px;
+  2682	    }
+  2683	    
+  2684	    .search-input,
+  2685	    .filter-select {
+  2686	        width: 100%;
+  2687	    }
+  2688	    
+  2689	    /* テーブル */
+  2690	    .table-container {
+  2691	        overflow-x: auto;
+  2692	        -webkit-overflow-scrolling: touch;
+  2693	    }
+  2694	    
+  2695	    .data-table {
+  2696	        font-size: 12px;
+  2697	        min-width: 800px;
+  2698	    }
+  2699	    
+  2700	    .data-table th,
+  2701	    .data-table td {
+  2702	        padding: 8px;
+  2703	        white-space: nowrap;
+  2704	    }
+  2705	    
+  2706	    /* LINE管理 */
+  2707	    .line-container {
+  2708	        grid-template-columns: 1fr;
+  2709	        height: calc(100vh - 140px);
+  2710	    }
+  2711	    
+  2712	    .line-sidebar {
+  2713	        display: none;
+  2714	        position: fixed;
+  2715	        top: 64px;
+  2716	        left: 0;
+  2717	        right: 0;
+  2718	        bottom: 0;
+  2719	        z-index: 100;
+  2720	        background: white;
+  2721	    }
+  2722	    
+  2723	    .line-sidebar.mobile-active {
+  2724	        display: flex;
+  2725	    }
+  2726	    
+  2727	    .line-chat {
+  2728	        display: none;
+  2729	    }
+  2730	    
+  2731	    .line-chat.mobile-active {
+  2732	        display: flex;
+  2733	    }
+  2734	    
+  2735	    /* 会話リスト */
+  2736	    .conversation-item {
+  2737	        padding: 12px;
+  2738	    }
+  2739	    
+  2740	    .conversation-avatar {
+  2741	        width: 40px;
+  2742	        height: 40px;
+  2743	        font-size: 16px;
+  2744	    }
+  2745	    
+  2746	    /* チャットメッセージ */
+  2747	    .message-bubble {
+  2748	        max-width: 85%;
+  2749	    }
+  2750	    
+  2751	    .message-content {
+  2752	        padding: 10px 12px;
+  2753	        font-size: 14px;
+  2754	    }
+  2755	    
+  2756	    /* 器材準備リスト */
+  2757	    .equipment-controls {
+  2758	        flex-direction: column;
+  2759	        gap: 8px;
+  2760	    }
+  2761	    
+  2762	    .equipment-controls input,
+  2763	    .equipment-controls button {
+  2764	        width: 100%;
+  2765	    }
+  2766	    
+  2767	    .equipment-table {
+  2768	        overflow-x: auto;
+  2769	        -webkit-overflow-scrolling: touch;
+  2770	    }
+  2771	    
+  2772	    .equipment-table table {
+  2773	        font-size: 10px;
+  2774	        min-width: 1000px;
+  2775	    }
+  2776	    
+  2777	    .equipment-table th,
+  2778	    .equipment-table td {
+  2779	        padding: 6px 4px;
+  2780	    }
+  2781	    
+  2782	    /* タブ */
+  2783	    .tabs {
+  2784	        overflow-x: auto;
+  2785	        -webkit-overflow-scrolling: touch;
+  2786	        scrollbar-width: none;
+  2787	        -ms-overflow-style: none;
+  2788	    }
+  2789	    
+  2790	    .tabs::-webkit-scrollbar {
+  2791	        display: none;
+  2792	    }
+  2793	    
+  2794	    .tab-btn {
+  2795	        padding: 10px 16px;
+  2796	        font-size: 13px;
+  2797	    }
+  2798	    
+  2799	    /* グラフ */
+  2800	    .charts-grid {
+  2801	        grid-template-columns: 1fr;
+  2802	    }
+  2803	    
+  2804	    .chart-card {
+  2805	        padding: 16px;
+  2806	    }
+  2807	    
+  2808	    /* ダッシュボードセクション */
+  2809	    .dashboard-section {
+  2810	        padding: 16px;
+  2811	        margin-bottom: 16px;
+  2812	    }
+  2813	    
+  2814	    .dashboard-section h3 {
+  2815	        font-size: 18px;
+  2816	    }
+  2817	    
+  2818	    /* スケジュールカード */
+  2819	    .schedule-card {
+  2820	        flex-direction: column;
+  2821	        align-items: stretch;
+  2822	        gap: 12px;
+  2823	    }
+  2824	    
+  2825	    .schedule-actions {
+  2826	        flex-direction: column;
+  2827	        width: 100%;
+  2828	    }
+  2829	    
+  2830	    .schedule-actions button {
+  2831	        width: 100%;
+  2832	    }
+  2833	    
+  2834	    /* ミニカレンダー */
+  2835	    #mini-calendar {
+  2836	        gap: 4px;
+  2837	        font-size: 12px;
+  2838	    }
+  2839	    
+  2840	    .calendar-header {
+  2841	        padding: 8px 4px;
+  2842	        margin-bottom: 4px;
+  2843	        flex-wrap: wrap;
+  2844	        gap: 8px;
+  2845	    }
+  2846	    
+  2847	    #calendar-year-input,
+  2848	    #calendar-month-input {
+  2849	        width: 50px !important;
+  2850	        font-size: 14px !important;
+  2851	        padding: 4px 6px !important;
+  2852	    }
+  2853	    
+  2854	    .calendar-header span {
+  2855	        font-size: 14px !important;
+  2856	    }
+  2857	    
+  2858	    .calendar-header button {
+  2859	        font-size: 11px !important;
+  2860	        padding: 4px 8px !important;
+  2861	    }
+  2862	    
+  2863	    .calendar-nav-btn {
+  2864	        font-size: 20px;
+  2865	        padding: 4px 8px;
+  2866	    }
+  2867	    
+  2868	    .calendar-cell {
+  2869	        padding: 4px;
+  2870	        font-size: 11px;
+  2871	    }
+  2872	    
+  2873	    .calendar-badge {
+  2874	        font-size: 9px;
+  2875	        padding: 1px 4px;
+  2876	    }
+  2877	    
+  2878	    /* モーダル */
+  2879	    .modal {
+  2880	        padding: 0;
+  2881	    }
+  2882	    
+  2883	    .modal-content {
+  2884	        max-width: 100%;
+  2885	        width: 100%;
+  2886	        max-height: 100vh;
+  2887	        height: 100vh;
+  2888	        border-radius: 0;
+  2889	        margin: 0;
+  2890	    }
+  2891	    
+  2892	    .modal-content.modal-large {
+  2893	        max-width: 100%;
+  2894	    }
+  2895	    
+  2896	    .modal-header {
+  2897	        padding: 16px;
+  2898	        border-radius: 0;
+  2899	    }
+  2900	    
+  2901	    .modal-header h3 {
+  2902	        font-size: 16px;
+  2903	        white-space: nowrap;
+  2904	        overflow: hidden;
+  2905	        text-overflow: ellipsis;
+  2906	        max-width: calc(100% - 40px);
+  2907	    }
+  2908	    
+  2909	    .modal-body {
+  2910	        padding: 16px;
+  2911	        max-height: calc(100vh - 80px);
+  2912	    }
+  2913	    
+  2914	    /* フォーム */
+  2915	    .form-grid {
+  2916	        grid-template-columns: 1fr;
+  2917	        gap: 12px;
+  2918	    }
+  2919	    
+  2920	    .form-actions {
+  2921	        flex-direction: column;
+  2922	    }
+  2923	    
+  2924	    .form-actions button {
+  2925	        width: 100%;
+  2926	    }
+  2927	    
+  2928	    /* AIレポート */
+  2929	    .ai-report-container {
+  2930	        padding: 16px;
+  2931	    }
+  2932	    
+  2933	    .report-header h3 {
+  2934	        font-size: 20px;
+  2935	    }
+  2936	    
+  2937	    .report-section {
+  2938	        padding: 16px;
+  2939	    }
+  2940	    
+  2941	    .report-section h4 {
+  2942	        font-size: 18px;
+  2943	    }
+  2944	    
+  2945	    .report-section p,
+  2946	    .report-section li {
+  2947	        font-size: 14px;
+  2948	    }
+  2949	    
+  2950	    .stat-grid {
+  2951	        grid-template-columns: repeat(2, 1fr);
+  2952	        gap: 12px;
+  2953	    }
+  2954	    
+  2955	    .stat-card .value {
+  2956	        font-size: 24px;
+  2957	    }
+  2958	    
+  2959	    .stat-card .label {
+  2960	        font-size: 12px;
+  2961	    }
+  2962	    
+  2963	    /* ボタン */
+  2964	    .btn {
+  2965	        padding: 12px 16px;
+  2966	        font-size: 14px;
+  2967	        width: 100%;
+  2968	        text-align: center;
+  2969	    }
+  2970	    
+  2971	    /* アラート */
+  2972	    .alert-item {
+  2973	        padding: 10px 12px;
+  2974	        font-size: 13px;
+  2975	    }
+  2976	}
+  2977	
+  2978	@media (max-width: 480px) {
+  2979	    .mobile-header h1 {
+  2980	        font-size: 16px;
+  2981	    }
+  2982	    
+  2983	    .kpi-value {
+  2984	        font-size: 28px;
+  2985	    }
+  2986	    
+  2987	    .kpi-value.revenue {
+  2988	        font-size: clamp(18px, 10vw, 28px);
+  2989	    }
+  2990	    
+  2991	    .kpi-label {
+  2992	        font-size: 12px;
+  2993	    }
+  2994	    
+  2995	    .page-title {
+  2996	        font-size: 20px;
+  2997	    }
+  2998	    
+  2999	    .stat-grid {
+  3000	        grid-template-columns: 1fr;
+  3001	    }
+  3002	    
+  3003	    .equipment-table table {
+  3004	        font-size: 9px;
+  3005	    }
+  3006	    
+  3007	    .tab-btn {
+  3008	        font-size: 12px;
+  3009	        padding: 8px 12px;
+  3010	    }
+  3011	    
+  3012	    .report-section h4 {
+  3013	        font-size: 16px;
+  3014	    }
+  3015	    
+  3016	    .report-section .icon {
+  3017	        font-size: 20px;
+  3018	    }
+  3019	    
+  3020	    /* チーム分けモード */
+  3021	    .team-mode-toggle {
+  3022	        flex-direction: column;
+  3023	        gap: 10px;
+  3024	    }
+  3025	    
+  3026	    .mode-btn {
+  3027	        width: 100%;
+  3028	        font-size: 14px;
+  3029	        padding: 10px 16px;
+  3030	    }
+  3031	    
+  3032	    /* ガイド実績 */
+  3033	    .guide-charts-container {
+  3034	        grid-template-columns: 1fr;
+  3035	    }
+  3036	    
+  3037	    .guide-stats-table {
+  3038	        font-size: 12px;
+  3039	    }
+  3040	    
+  3041	    .guide-stats-table th,
+  3042	    .guide-stats-table td {
+  3043	        padding: 8px 4px;
+  3044	    }
+  3045	}
+  3046	
+  3047	/* ========== LINE管理ページ ========== */
+  3048	.line-container {
+  3049	    display: grid;
+  3050	    grid-template-columns: 350px 1fr;
+  3051	    gap: 0;
+  3052	    height: calc(100vh - 180px);
+  3053	    border: 1px solid #DEE2E6;
+  3054	    border-radius: 8px;
+  3055	    overflow: hidden;
+  3056	}
+  3057	
+  3058	.line-sidebar {
+  3059	    background: #F8F9FA;
+  3060	    border-right: 1px solid #DEE2E6;
+  3061	    display: flex;
+  3062	    flex-direction: column;
+  3063	    overflow: hidden;
+  3064	}
+  3065	
+  3066	.line-search {
+  3067	    padding: 16px;
+  3068	    border-bottom: 1px solid #DEE2E6;
+  3069	}
+  3070	
+  3071	.line-search input {
+  3072	    width: 100%;
+  3073	    padding: 10px 14px;
+  3074	    border: 1px solid #DEE2E6;
+  3075	    border-radius: 8px;
+  3076	    font-size: 14px;
+  3077	}
+  3078	
+  3079	.conversations-list {
+  3080	    flex: 1;
+  3081	    overflow-y: auto;
+  3082	    padding: 8px;
+  3083	}
+  3084	
+  3085	.line-conversation-card {
+  3086	    background: white;
+  3087	    border: 1px solid #E0E0E0;
+  3088	    border-radius: 8px;
+  3089	    padding: 14px;
+  3090	    margin-bottom: 8px;
+  3091	    cursor: pointer;
+  3092	    transition: all 0.2s;
+  3093	}
+  3094	
+  3095	.line-conversation-card:hover {
+  3096	    background: #F0F9FF;
+  3097	    border-color: #0A9396;
+  3098	    box-shadow: 0 2px 8px rgba(10, 147, 150, 0.1);
+  3099	}
+  3100	
+  3101	.conversation-header {
+  3102	    display: flex;
+  3103	    align-items: center;
+  3104	    gap: 12px;
+  3105	    margin-bottom: 8px;
+  3106	}
+  3107	
+  3108	.user-avatar {
+  3109	    width: 40px;
+  3110	    height: 40px;
+  3111	    border-radius: 50%;
+  3112	    background: linear-gradient(135deg, #0A9396 0%, #005F73 100%);
+  3113	    color: white;
+  3114	    display: flex;
+  3115	    align-items: center;
+  3116	    justify-content: center;
+  3117	    font-weight: 600;
+  3118	    font-size: 18px;
+  3119	}
+  3120	
+  3121	.user-info {
+  3122	    display: flex;
+  3123	    align-items: center;
+  3124	    gap: 12px;
+  3125	    flex: 1;
+  3126	}
+  3127	
+  3128	.user-info h4 {
+  3129	    margin: 0;
+  3130	    font-size: 15px;
+  3131	    font-weight: 600;
+  3132	    color: #212529;
+  3133	}
+  3134	
+  3135	.timestamp {
+  3136	    font-size: 12px;
+  3137	    color: #6C757D;
+  3138	    margin: 2px 0 0 0;
+  3139	}
+  3140	
+  3141	.last-message {
+  3142	    font-size: 13px;
+  3143	    color: #6C757D;
+  3144	    overflow: hidden;
+  3145	    text-overflow: ellipsis;
+  3146	    white-space: nowrap;
+  3147	}
+  3148	
+  3149	.badge {
+  3150	    display: inline-block;
+  3151	    padding: 2px 8px;
+  3152	    border-radius: 12px;
+  3153	    font-size: 11px;
+  3154	    font-weight: 600;
+  3155	    margin-left: 8px;
+  3156	}
+  3157	
+  3158	.badge-danger {
+  3159	    background: #DC3545;
+  3160	    color: white;
+  3161	}
+  3162	
+  3163	.line-chat {
+  3164	    display: flex;
+  3165	    flex-direction: column;
+  3166	    background: white;
+  3167	}
+  3168	
+  3169	.chat-header {
+  3170	    padding: 16px 20px;
+  3171	    border-bottom: 1px solid #DEE2E6;
+  3172	    background: linear-gradient(135deg, #0A9396 0%, #005F73 100%);
+  3173	    color: white;
+  3174	}
+  3175	
+  3176	.chat-header-info h3 {
+  3177	    margin: 0;
+  3178	    font-size: 18px;
+  3179	    font-weight: 600;
+  3180	}
+  3181	
+  3182	.chat-messages {
+  3183	    flex: 1;
+  3184	    padding: 20px;
+  3185	    overflow-y: auto;
+  3186	    background: #F8F9FA;
+  3187	}
+  3188	
+  3189	.chat-input {
+  3190	    padding: 16px 20px;
+  3191	    border-top: 1px solid #DEE2E6;
+  3192	    display: flex;
+  3193	    gap: 12px;
+  3194	}
+  3195	
+  3196	.chat-input input {
+  3197	    flex: 1;
+  3198	    padding: 10px 14px;
+  3199	    border: 1px solid #DEE2E6;
+  3200	    border-radius: 8px;
+  3201	    font-size: 14px;
+  3202	}
+  3203	
+  3204	@media (max-width: 768px) {
+  3205	    .line-container {
+  3206	        grid-template-columns: 1fr;
+  3207	        height: auto;
+  3208	    }
+  3209	    
+  3210	    .line-sidebar {
+  3211	        border-right: none;
+  3212	        border-bottom: 1px solid #DEE2E6;
+  3213	        max-height: 300px;
+  3214	    }
+  3215	}
+  3216	
+  3217	
